@@ -31,7 +31,7 @@ public class H03HttpServer extends Thread {
         String header = "HTTP/1.0 200 OK\r\n"
                 + "Server: OneFile 1.0\r\n"
                 + "Content-length: " + this.content.length + "\r\n"
-                + "Content-type: text/plain\r\n\r\n";
+                + "Content-type: application/json\r\n\r\n";
         this.header = header.getBytes("ASCII");
     }
 
@@ -73,6 +73,7 @@ public class H03HttpServer extends Thread {
                         request.append((char) c);
 
                     }
+                    System.out.println(request.toString());
                     // If this is HTTP/1.0 or later send a MIME header
                     if (request.toString().indexOf("HTTP/") != -1) {
                         out.write(this.header);
