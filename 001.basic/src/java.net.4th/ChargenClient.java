@@ -4,25 +4,11 @@ import java.net.*;
 import java.io.IOException;
 
 public class ChargenClient {
-    
-  public static int DEFAULT_PORT = 19;
-  
+
   public static void main(String[] args) {
-  
-    if (args.length == 0) {
-      System.out.println("Usage: java ChargenClient host [port]"); 
-      return;
-    }  
-  
-    int port;
-    try {
-      port = Integer.parseInt(args[1]);
-    } catch (RuntimeException ex) {
-      port = DEFAULT_PORT;   
-    }
     
     try {
-      SocketAddress address = new InetSocketAddress(args[0], port);
+      SocketAddress address = new InetSocketAddress("localhost", 8888);
       SocketChannel client = SocketChannel.open(address);
       
       ByteBuffer buffer = ByteBuffer.allocate(74);

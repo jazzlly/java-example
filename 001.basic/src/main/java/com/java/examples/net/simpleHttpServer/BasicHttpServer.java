@@ -19,7 +19,7 @@ public class BasicHttpServer {
         int nThreads = Runtime.getRuntime().availableProcessors();
         taskExecutor = new ThreadPoolExecutor(nThreads, nThreads, 0L,
                         TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(100),
-                        new ThreadPoolExecutor.DiscardPolicy());
+                        new ThreadPoolExecutor.AbortPolicy());
         try {
             ServerSocket serverSocket = new ServerSocket(PORT);
             serverSocket.setSoTimeout(5000);
@@ -34,7 +34,7 @@ public class BasicHttpServer {
 
         private ServerSocket serverSocket;
 
-        public ServerThread(ServerSocket s) throws IOException {
+        public ServerThread(ServerSocket s) {
             this.serverSocket = s;
         }
 

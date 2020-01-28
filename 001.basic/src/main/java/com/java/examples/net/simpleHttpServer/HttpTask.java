@@ -24,6 +24,7 @@ public class HttpTask implements Runnable {
 
             Request httpRequest = HttpMessageParser.parse2request(socket.getInputStream());
             try {
+                System.out.println("receive request: " + httpRequest.toString());
                 // 根据请求结果进行响应，省略返回
                 String result = "{\"result\":\"ok\"}";
                 String httpRes = HttpMessageParser.buildResponse(httpRequest, result);
