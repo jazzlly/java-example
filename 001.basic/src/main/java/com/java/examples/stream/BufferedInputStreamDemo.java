@@ -1,4 +1,4 @@
-package com.java.examples.net.stream;
+package com.java.examples.stream;
 
 import java.io.*;
 import java.nio.charset.Charset;

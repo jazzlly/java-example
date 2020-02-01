@@ -13,18 +13,17 @@ public class IntgenClient {
         int round = 100;
         SocketChannel client = null;
         try {
-            SocketAddress address = new InetSocketAddress("localhost", 8888);
+            SocketAddress address = new InetSocketAddress(8888);
             client = SocketChannel.open(address);
 
             ByteBuffer buffer = ByteBuffer.allocate(4);
             IntBuffer intBuffer = buffer.asIntBuffer();
-            // WritableByteChannel out = Channels.newChannel(System.out);
 
             while (client.read(buffer) != -1) {
                 // buffer.flip();
                 int tmp = intBuffer.get();
                 System.out.println(tmp);
-                // out.write(buffer);
+
                 buffer.clear();
                 intBuffer.rewind();
 

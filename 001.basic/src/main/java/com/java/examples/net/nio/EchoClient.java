@@ -13,14 +13,36 @@ public class EchoClient {
         try {
             SocketAddress address = new InetSocketAddress("localhost", 8888);
             SocketChannel client = SocketChannel.open(address);
-            client.configureBlocking(true);
+            // client.configureBlocking(true);
 
             ByteBuffer sendBuffer = ByteBuffer.allocate(100);
             ByteBuffer recvBuffer = ByteBuffer.allocate(100);
 
+            Thread thread = new Thread(() -> {
+                while (true) {
+                    int n = 0;
+                    try {
+                        n = client.read(recvBuffer);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                    if (n == 0) {
+                        continue;
+                    }
+                    System.out.println("recv msg count: " + n);
+                    recvBuffer.flip();
+                    byte[] bytes = new byte[n];
+                    recvBuffer.get(bytes);
+                    recvBuffer.clear();
+                    System.out.println(new String(bytes, Charset.defaultCharset()));
+                }
+            });
+            thread.start();
+
             while (true) {
                 char c = (char) System.in.read();
-                System.out.println(c);
+                // System.out.println(c);
 
                 if (c == '\n') {
                     System.out.println("send msg");
@@ -29,16 +51,15 @@ public class EchoClient {
                     client.write(sendBuffer);
                     sendBuffer.clear();
 
-                    int n = client.read(recvBuffer);
-                    System.out.println("recv msg count: " + n);
-                    byte[] bytes = new byte[64];
-                    recvBuffer.rewind();
-                    recvBuffer.get(bytes);
-                    String msg = new String(bytes, Charset.defaultCharset());
-                    System.out.println("recv msg: " + msg);
-                    recvBuffer.clear();
-                    recvBuffer.put(new byte[100]);
-                    recvBuffer.clear();
+//                    int n = client.read(recvBuffer);
+////                    while (n == 0) {
+////                        n = client.read(recvBuffer);
+////                    }
+//                    System.out.println("recv msg count: " + n);
+//                    recvBuffer.flip();
+//                    byte[] bytes = new byte[n];
+//                    recvBuffer.get(bytes);
+//                    System.out.println(new String(bytes, Charset.defaultCharset()));
 
                 } else {
                     System.out.println("put char: " + c);

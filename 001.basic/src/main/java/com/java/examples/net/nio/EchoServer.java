@@ -1,5 +1,8 @@
 package com.java.examples.net.nio;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.nio.*;
 import java.nio.channels.*;
 import java.net.*;
@@ -55,31 +58,54 @@ public class EchoServer {
                         SocketChannel client = server.accept();
                         System.out.println("Accepted connection from " + client);
                         client.configureBlocking(false);
-                        SelectionKey clientKey = client.register(
-                                selector, SelectionKey.OP_WRITE | SelectionKey.OP_READ);
-                         ByteBuffer buffer = ByteBuffer.allocate(100);
-                         clientKey.attach(buffer);
+                        SelectionKey clientKey = client.register(selector,
+                                SelectionKey.OP_READ);
+                        EchoMsg msg = EchoMsg.builder()
+                                .hasData(false)
+                                .byteBuffer(ByteBuffer.allocate(100))
+                                .build();
+                         clientKey.attach(msg);
                     }
                     if (key.isReadable()) {
                         SocketChannel client = (SocketChannel) key.channel();
-                        ByteBuffer output = (ByteBuffer) key.attachment();
-                        client.read(output);
+                        EchoMsg msg = (EchoMsg) key.attachment();
+                        ByteBuffer output = msg.getByteBuffer();
+                        output.compact();
+                        int n = client.read(output);
+                        if (n == 0) {
+                            continue;
+                        }
+                        output.flip();
 
-                        String tmp = new String(output.array(), Charset.defaultCharset());
+                        msg.setHasData(true);
+
+                        String tmp = new String(output.array(), 0, output.remaining(),
+                                Charset.defaultCharset());
                         System.out.println("recv msg: " + tmp);
-                        System.out.println("msg len: " + tmp.length());
+
+                        // 有数据可读时， 才触发写的监听
+                        key.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                     }
                     if (key.isWritable()) {
-                        SocketChannel client = (SocketChannel) key.channel();
-                        ByteBuffer output = (ByteBuffer) key.attachment();
-                        if (output != null) {
-                            output.flip();
-                            client.write(output);
+                        System.out.println("write event ...");
 
-                            output.clear();
-                            output.put(new byte[100]);
-                            output.clear();
+                        SocketChannel client = (SocketChannel) key.channel();
+                        EchoMsg msg = (EchoMsg) key.attachment();
+                        if (!msg.isHasData()) {
+                            continue;
                         }
+
+                        ByteBuffer output = msg.getByteBuffer();
+                        while (output.hasRemaining()) {
+                            String tmp = new String(output.array(), 0, output.remaining(),
+                                    Charset.defaultCharset());
+                            System.out.println("send msg: " + tmp);
+                            client.write(output);
+                        }
+
+                        msg.setHasData(false);
+                        // 数据写完后， 请清理掉写事件监听
+                        key.interestOps(SelectionKey.OP_READ);
                     }
                 } catch (IOException ex) {
                     key.cancel();
@@ -90,4 +116,11 @@ public class EchoServer {
             }
         }
     }
+}
+
+@Data
+@Builder
+class EchoMsg {
+    boolean hasData;
+    ByteBuffer byteBuffer;
 }

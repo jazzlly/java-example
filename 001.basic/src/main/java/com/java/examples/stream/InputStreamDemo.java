@@ -1,4 +1,4 @@
-package com.java.examples.net.stream;
+package com.java.examples.stream;
 
 import java.io.File;
 import java.io.FileInputStream;
