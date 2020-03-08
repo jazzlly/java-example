@@ -30,6 +30,15 @@ public class L15ThreeSum {
 
         Set<List<Integer>> result = new LinkedHashSet<>();
         for (int i = 0; i < nums.length - 2; i++) {
+            // 加速：如果第一个都大于0， 由于数组是升序排列，则三数之和肯定大于0
+            if (nums[i] > 0) {
+                continue;
+            }
+            // 加速：跳过计算过的数据，同时防止结果重复
+            if (i != 0 && nums[i] == nums[i-1]) {
+                continue;
+            }
+
             int head = i + 1;
             int tail = nums.length - 1;
             while (tail > head) {
@@ -39,12 +48,16 @@ public class L15ThreeSum {
                     result.add(Arrays.asList(
                             nums[i], nums[head], nums[tail]));
                     // 两个指针同时移动
-                    head++;
-                    tail--;
+                    do {
+                        head ++;
+                    } while (head < tail && nums[head] == nums[head -1]);
+                    do {
+                        tail--;
+                    } while (head < tail && nums[tail] == nums[tail + 1]);
                 } else if (sum > 0) {
-                    tail--;
+                     tail--;
                 } else {
-                    head++;
+                     head++;
                 }
             }
         }
