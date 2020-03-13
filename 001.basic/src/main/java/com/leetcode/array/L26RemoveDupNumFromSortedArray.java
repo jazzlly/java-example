@@ -1,6 +1,6 @@
 package com.leetcode.array;
 
-public class L26DupNumbers {
+public class L26RemoveDupNumFromSortedArray {
     /**
      * 26. 删除排序数组中的重复项
      * 给定一个排序数组，你需要在 原地 删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。
@@ -19,25 +19,15 @@ public class L26DupNumbers {
      * @param nums
      * @return
      */
-    public static int removeDuplicates1(int[] nums) {
-        int dupCount = 0;
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i-1] == nums[i]) {
-                dupCount++;
-            } else {
-                nums[i - dupCount] = nums[i];
-            }
-        }
-
-        return nums.length - dupCount;
-    }
-
     public static int removeDuplicates(int[] nums) {
+        // 快慢指针法： 时间复杂度O(n), 空间复杂度O(1)
         int slow = 0;
         for (int fast = 1; fast < nums.length; fast++) {
+            // 遇到重复数值时，快指针前进
             if (nums[slow] == nums[fast]) {
                 continue;
             }
+            // 数值不同时，慢指针前进，并将快指针指向数值复制到慢指针位置
             nums[++slow] = nums[fast];
         }
         return slow + 1;

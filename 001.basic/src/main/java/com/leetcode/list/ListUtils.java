@@ -1,5 +1,8 @@
 package com.leetcode.list;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ListUtils {
     public static void printList(ListNode head) {
         while (head != null) {
@@ -27,5 +30,14 @@ public class ListUtils {
         }
 
         return head;
+    }
+
+    public static List<Integer> dumpList(ListNode node) {
+        List<Integer> list = new ArrayList<>();
+        while (node != null) {
+            list.add(node.val);
+            node = node.next;
+        }
+        return list;
     }
 }
