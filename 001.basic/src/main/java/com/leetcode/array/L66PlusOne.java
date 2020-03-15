@@ -1,7 +1,5 @@
 package com.leetcode.array;
 
-import java.util.Arrays;
-
 /**
  * 66. 加一
  * 给定一个由整数组成的非空数组所表示的非负整数，在该数的基础上加一。
@@ -21,8 +19,11 @@ import java.util.Arrays;
  * 解释: 输入数组表示数字 4321。
  */
 public class L66PlusOne {
-    public int[] plusOne(int[] digits) {
 
+    /**
+     * 时间复杂度 O(n), 空间复杂度: 一般情况O(1), 特殊情况O(n)
+     */
+    public int[] plusOne(int[] digits) {
         for (int i = digits.length - 1; i >= 0; i--) {
             digits[i]++;
 
@@ -36,8 +37,8 @@ public class L66PlusOne {
             return digits;
         }
 
+        // 最高位发生进位
         int[] ret = new int[digits.length+1];
-        Arrays.fill(ret, 0);
         ret[0] = 1;
         return ret;
     }

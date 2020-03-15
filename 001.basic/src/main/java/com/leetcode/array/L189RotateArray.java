@@ -31,6 +31,15 @@ public class L189RotateArray {
      * @param k
      */
     public void rotate1(int[] nums, int k) {
+        assert nums != null;
+        if (nums.length == 0) {
+            return;
+        }
+        k %= nums.length;
+        if (k == 0) {
+            return;
+        }
+
         int tmp[] = new int[nums.length];
         for (int i = 0; i < nums.length -k ; i++) {
             tmp[k+i] = nums[i];
@@ -49,39 +58,27 @@ public class L189RotateArray {
      * @param k
      */
     public void rotate(int[] nums, int k) {
-        // 快速处理边界场景
-        if (nums.length <= 1) {
+        assert nums != null;
+        if (nums.length == 0) {
             return;
         }
-        if (k >= nums.length) {
-            k = k % nums.length;
-        }
+        k %= nums.length;
         if (k == 0) {
             return;
         }
 
-        int[] heads = new int[]{0, 0, k};
-        int[] tails = new int[]{nums.length - 1, k - 1, nums.length - 1};
-        /*
-            1. 第一次反转整个数组：(head, tail) = (0, nums.lenght-1)
-            2. 第二次反转数值前部: (head, tail) = (0, k-1)
-            3. 第三次反转数值后部: (head, tail) = (k, nums.length-1)
-         */
-        for (int i = 0; i < heads.length; i++) {
-            int head = heads[i];
-            int tail = tails[i];
-
-            while (head < tail) {
-                swap(nums, head, tail);
-                head++;
-                tail--;
-            }
-        }
+        reverseArray(nums, 0, nums.length -1);
+        reverseArray(nums, 0, k -1);
+        reverseArray(nums, k, nums.length -1);
     }
 
-    public void swap(int[] nums, int i, int j) {
-        int tmp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = tmp;
+    public void reverseArray(int[] nums, int head, int tail) {
+        while (head < tail) {
+            int tmp = nums[head];
+            nums[head] = nums[tail];
+            nums[tail] = tmp;
+            head++;
+            tail--;
+        }
     }
 }

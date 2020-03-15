@@ -21,6 +21,7 @@ import java.util.Arrays;
 public class L88MergeSortedArray {
     /**
      * 常规方法，双指针，从前向后，使用一个大小为m+n的临时数组
+     * 时间复杂度 O(n), 空间复杂度O(m+n)
      */
     public void merge1(int[] nums1, int m, int[] nums2, int n) {
         int[] tmp = Arrays.copyOfRange(nums1, 0, m + n);
@@ -53,7 +54,8 @@ public class L88MergeSortedArray {
     }
 
     /**
-     * 双指针，从后向前
+     * 双指针，从后向前。利用了nums1最后的n个0作为临时空间
+     * 时间复杂度 O(n), 空间复杂度O(1)
      */
     public void merge(int[] nums1, int m, int[] nums2, int n) {
         int tail1 = m - 1;
