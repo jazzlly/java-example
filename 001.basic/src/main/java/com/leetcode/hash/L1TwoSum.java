@@ -16,26 +16,19 @@ import java.util.Map;
  */
 public class L1TwoSum {
 
+    /**
+     * 一遍hash算法
+     */
     public static int[] twoSum(int[] nums, int target) {
-        if (nums == null || nums.length == 0) {
-            return new int[0];
-        }
-
         // key为数值， value为数值的下标
         Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
             int diff = target - nums[i];
 
-            /*
-            Integer pos = map.get(diff);
-            if (pos != null) {
-                return new int[] {i, pos};
-            } */
             // containsKey比直接get快
             if (map.containsKey(diff)) {
                 return new int[] {i, map.get(diff)};
             }
-
             map.put(nums[i], i);
         }
 

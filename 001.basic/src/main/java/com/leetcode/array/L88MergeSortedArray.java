@@ -1,6 +1,5 @@
 package com.leetcode.array;
 
-import javax.swing.*;
 import java.util.Arrays;
 
 /**
@@ -21,11 +20,7 @@ import java.util.Arrays;
  */
 public class L88MergeSortedArray {
     /**
-     * 常规方法，生成一个大小为m+n的临时数组
-     * @param nums1
-     * @param m
-     * @param nums2
-     * @param n
+     * 常规方法，双指针，从前向后，使用一个大小为m+n的临时数组
      */
     public void merge1(int[] nums1, int m, int[] nums2, int n) {
         int[] tmp = Arrays.copyOfRange(nums1, 0, m + n);
@@ -57,23 +52,15 @@ public class L88MergeSortedArray {
         }
     }
 
-    // todo: 简化一下
+    /**
+     * 双指针，从后向前
+     */
     public void merge(int[] nums1, int m, int[] nums2, int n) {
         int tail1 = m - 1;
         int tail2 = n - 1;
+        int tail = m + n -1;
 
-        for (int tail = m + n - 1; tail >= 0; tail--) {
-            if (tail1 < 0) {
-                nums1[tail] = nums2[tail2];
-                tail2--;
-                continue;
-            }
-            if (tail2 < 0) {
-                nums1[tail] = nums1[tail1];
-                tail1--;
-                continue;
-            }
-
+        while (tail1 >= 0 && tail2 >= 0){
             if (nums1[tail1] >= nums2[tail2]) {
                 nums1[tail] = nums1[tail1];
                 tail1--;
@@ -81,6 +68,11 @@ public class L88MergeSortedArray {
                 nums1[tail] = nums2[tail2];
                 tail2--;
             }
+            tail--;
+        }
+
+        if (tail2 >= 0) {
+            System.arraycopy(nums2, 0, nums1, 0, tail2 + 1);
         }
     }
 }

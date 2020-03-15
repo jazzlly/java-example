@@ -1,8 +1,25 @@
 package com.leetcode.array;
 
 public class L283MoveZeros {
+    /**
+     * 快慢指针方法
+     */
+    public static void moveZeroes(int[] nums) {
+        int slow = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                continue;
+            }
 
-    public static void moveZeroes1(int[] nums) {
+            if (i != slow) {
+                nums[slow] = nums[i];
+                nums[i] = 0;
+            }
+            slow++;
+        }
+    }
+
+    public static void moveZeroes2(int[] nums) {
         if (nums.length <= 1) {
             return;
         }
@@ -24,7 +41,7 @@ public class L283MoveZeros {
         }
     }
 
-    public static void moveZeroes(int[] nums) {
+    public static void moveZeroes1(int[] nums) {
         int zeroCount = 0;
         for (int i = 0; i < nums.length; i++) {
             if (nums[i] == 0) {
@@ -36,19 +53,6 @@ public class L283MoveZeros {
                 int tmp = nums[i - zeroCount];
                 nums[i - zeroCount] = nums[i];
                 nums[i] = tmp;
-            }
-        }
-    }
-
-    public static void moveZeroes2(int[] nums) {
-        int slowPos = 0;
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] != 0) {
-                if (i != slowPos) {
-                    nums[slowPos] = nums[i];
-                    nums[i] = 0;
-                }
-                slowPos++;
             }
         }
     }
