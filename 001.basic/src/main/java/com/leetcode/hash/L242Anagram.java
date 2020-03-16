@@ -74,11 +74,6 @@ public class L242Anagram {
         int array1[] = new int[26];
         int array2[] = new int[26];
 
-        for (int i : array1) {
-            array1[i] = 0;
-            array2[i] = 0;
-        }
-
         for (char c : s.toCharArray()) {
             array1[c - 'a']++;
         }
