@@ -1,8 +1,6 @@
 package com.leetcode.hash;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 49. 字母异位词分组
@@ -23,19 +21,59 @@ import java.util.Map;
  */
 public class L49AnagramGroup {
 
-    public List<List<String>> groupAnagrams(String[] strs) {
-        Map<String, int[]> tableMap = new HashMap<>();
+    public List<List<String>> groupAnagrams1(String[] strs) {
+        assert strs != null;
 
-        // todo:
-        return null;
-    }
-
-    public int[] computeHashTable(String str) {
-        int[] table = new int[26];
-        for (char c : str.toCharArray()) {
-            table[c - 'a']++;
+        Map<Map<Character, Integer>, List<String>> tableMap = new HashMap<>();
+        for (String s : strs) {
+            Map<Character, Integer> table = computeHashMap(s);
+            if (tableMap.containsKey(table)) {
+                tableMap.get(table).add(s);
+            } else {
+                List<String> list = new ArrayList<>();
+                list.add(s);
+                tableMap.put(table, list);
+            }
         }
 
-        return table;
+        return new ArrayList<>(tableMap.values());
+    }
+
+    public Map<Character, Integer> computeHashMap(String str) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : str.toCharArray()) {
+            if (map.containsKey(c)) {
+                map.put(c, map.get(c) + 1);
+            } else {
+                map.put(c, 1);
+            }
+        }
+        return map;
+    }
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        assert strs != null;
+
+        Map<String, List<String>> ansMap = new HashMap<>();
+        for (String s : strs) {
+            String ans = computeAns(s);
+            if (!ansMap.containsKey(ans)) {
+                ansMap.put(ans, new ArrayList<>());
+            }
+            ansMap.get(ans).add(s);
+        }
+        return new ArrayList<>(ansMap.values());
+    }
+
+    private String computeAns(String s) {
+        int[] table = new int[26];
+        for (char c : s.toCharArray()) {
+            table[c - 'a']++;
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i : table) {
+            builder.append(i).append("#");
+        }
+        return builder.toString();
     }
 }
