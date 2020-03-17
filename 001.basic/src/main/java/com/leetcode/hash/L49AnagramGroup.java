@@ -21,6 +21,12 @@ import java.util.*;
  */
 public class L49AnagramGroup {
 
+    /**
+     * 使用一个hashmap作为hashmap的key
+     *
+     * @param strs
+     * @return
+     */
     public List<List<String>> groupAnagrams1(String[] strs) {
         assert strs != null;
 
@@ -51,6 +57,13 @@ public class L49AnagramGroup {
         return map;
     }
 
+    /**
+     * 使用string作为hashmap的key
+     * 时间复杂度 O(N*M), N为strs数组长度，M为每个str的平均长度
+     * 空间复杂度O(N*M)
+     * @param strs
+     * @return
+     */
     public List<List<String>> groupAnagrams(String[] strs) {
         assert strs != null;
 
