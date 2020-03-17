@@ -1,5 +1,7 @@
 package com.leetcode.queue;
 
+import java.util.NoSuchElementException;
+
 /**
  *641. 设计循环双端队列
  * 设计实现双端队列。
@@ -33,17 +35,18 @@ package com.leetcode.queue;
  * 请不要使用内置的双端队列库。
  */
 // L641CircleDeque
-public class MyCircularDeque {
+public class MyCircularDeque2 {
     int head = 0;   // 对头元素：content[head]
     int tail = 0;   // 队尾元素：content[(tail - 1 + content.length) % content.length]
-                    // 队列为空 head = tail
+                    // 队列为空时: size == 0, head == tail
+    int size = 0;   // 队列长度
     final int[] content;
 
     /** Initialize your data structure here.
      * Set the size of the deque to be k. */
-    public MyCircularDeque(int k) {
+    public MyCircularDeque2(int k) {
         assert k > 0;
-        content = new int[k + 1];
+        content = new int[k];
     }
 
     /** Adds an item at the front of Deque. Return true if the operation is successful. */
@@ -54,6 +57,7 @@ public class MyCircularDeque {
 
         head = (head + content.length - 1) % content.length;
         content[head] = value;
+        size++;
 
         return true;
     }
@@ -66,6 +70,7 @@ public class MyCircularDeque {
 
         content[tail] = value;
         tail = (tail + 1) % content.length;
+        size++;
         return true;
     }
 
@@ -76,6 +81,7 @@ public class MyCircularDeque {
         }
 
         head = (head + 1) % content.length;
+        size--;
         return true;
     }
 
@@ -86,6 +92,7 @@ public class MyCircularDeque {
         }
 
         tail = (tail -1 + content.length) % content.length;
+        size--;
         return true;
     }
 
@@ -110,11 +117,11 @@ public class MyCircularDeque {
 
     /** Checks whether the circular deque is empty or not. */
     public boolean isEmpty() {
-        return head == tail;
+        return size == 0;
     }
 
     /** Checks whether the circular deque is full or not. */
     public boolean isFull() {
-        return (tail + 1) % content.length == head;
+        return size == content.length;
     }
 }
