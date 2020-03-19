@@ -15,13 +15,11 @@ import java.util.Map;
  * 输出: 6
  */
 public class L44TrapWater {
+
     /**
      * 按行计算
      * 时间复杂度 O(n * m), m为数组中的最大值
      * 空间复杂度 O(1)
-     *
-     * @param height
-     * @return
      */
     public int trap1(int[] height) {
         assert height != null;
@@ -62,6 +60,11 @@ public class L44TrapWater {
         return ans;
     }
 
+    /**
+     * 按列计算, 每次循环计算出当前位置左边的最大值和右边最大值
+     * 时间复杂度: O(n^2)
+     * 空间复杂度: O(1)
+     */
     public int trap2(int[] height) {
         int water = 0;
         for (int i = 0; i < height.length; i++) {
@@ -96,22 +99,99 @@ public class L44TrapWater {
     Map<Integer, Integer> leftMaxMap = new HashMap<>();
     Map<Integer, Integer> rightMaxMap = new HashMap<>();
 
-    void genLeftMaxMap(int[] heigth) {
+    void genMaxMap(int[] heigth) {
+        for (int i = 0; i < heigth.length; i++) {
+            Integer leftMax = leftMaxMap.getOrDefault(i - 1, 0);
+            if (heigth[i] > leftMax) {
+                leftMax = heigth[i];
+            }
+            leftMaxMap.put(i, leftMax);
 
+            int rightIndex = heigth.length - i - 1;
+            Integer rightMax = rightMaxMap.getOrDefault(rightIndex + 1, 0);
+            if (heigth[rightIndex] > rightMax) {
+                rightMax = heigth[rightIndex];
+            }
+            rightMaxMap.put(rightIndex, rightMax);
+        }
     }
-    public int trap(int[] height) {
-        int water = 0;
-        genMaxMap(height, )
 
+    /**
+     * 按列计算: 将当前位置左边的最大值和右边最大值缓冲到一个hashmap中
+     * @param height
+     * @return
+     */
+    public int trap3(int[] height) {
+        int water = 0;
+        genMaxMap(height);
 
         for (int i = 0; i < height.length; i++) {
-            int leftMax = 0;
-            int rightMax = 0;
+            int leftMax = leftMaxMap.get(i);
+            if (height[i] >= leftMax) {
+                continue;
+            }
 
+            int rightMax = rightMaxMap.get(i);
+            if (height[i] >= rightMax) {
+                continue;
+            }
 
             water += Math.min(leftMax, rightMax) - height[i];
         }
+        return water;
+    }
 
+    /**
+     * 按列计算: 将当前位置左边的最大值和右边最大值缓冲到一个array中, 将hashmap简化为一个array
+     * 时间复杂度：O(n)
+     * 空间复杂度：O(n)
+     */
+    public int trap4(int[] height) {
+        int water = 0;
+
+        int[] leftMaxArray = new int[height.length];
+        int[] rightMaxArray = new int[height.length];
+
+        for (int i = 0; i < height.length; i++) {
+            leftMaxArray[i] = Math.max((i - 1) >= 0 ? leftMaxArray[i - 1] : 0, height[i]);;
+
+            int rightIndex = height.length - i - 1;
+            rightMaxArray[rightIndex] = Math.max(
+                    (rightIndex + 1 <= height.length - 1) ? rightMaxArray[rightIndex + 1] : 0, height[rightIndex]);
+        }
+
+        for (int i = 0; i < height.length; i++) {
+            int leftMax = leftMaxArray[i];
+            int rightMax = rightMaxArray[i];
+
+            water += Math.min(leftMax, rightMax) - height[i];
+        }
+        return water;
+    }
+
+    /**
+     * 按列计算: 将当前位置左边的最大值和右边最大值缓冲到一个array中, 将hashmap简化为一个array
+     * 优化空间复杂度: 去掉leftMaxArray
+     *
+     * 时间复杂度：O(n)
+     * 空间复杂度：O(n)
+     */
+    public int trap(int[] height) {
+        int water = 0;
+
+        int[] rightMaxArray = new int[height.length];
+
+        int rightMax = -1;
+        for (int i = height.length - 1; i >= 0; i--) {
+            rightMax = Math.max(rightMax, height[i]);
+            rightMaxArray[i] = rightMax;
+        }
+
+        int leftMax = -1;
+        for (int i = 0; i < height.length; i++) {
+            leftMax = Math.max(leftMax, height[i]);;
+            water += Math.min(leftMax, rightMaxArray[i]) - height[i];
+        }
         return water;
     }
 
