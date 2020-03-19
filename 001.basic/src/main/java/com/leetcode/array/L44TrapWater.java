@@ -1,5 +1,8 @@
 package com.leetcode.array;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 42. 接雨水
  * 给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
@@ -59,7 +62,7 @@ public class L44TrapWater {
         return ans;
     }
 
-    public int trap(int[] height) {
+    public int trap2(int[] height) {
         int water = 0;
         for (int i = 0; i < height.length; i++) {
             int leftMax = 0;
@@ -89,4 +92,27 @@ public class L44TrapWater {
 
         return water;
     }
+
+    Map<Integer, Integer> leftMaxMap = new HashMap<>();
+    Map<Integer, Integer> rightMaxMap = new HashMap<>();
+
+    void genLeftMaxMap(int[] heigth) {
+
+    }
+    public int trap(int[] height) {
+        int water = 0;
+        genMaxMap(height, )
+
+
+        for (int i = 0; i < height.length; i++) {
+            int leftMax = 0;
+            int rightMax = 0;
+
+
+            water += Math.min(leftMax, rightMax) - height[i];
+        }
+
+        return water;
+    }
+
 }
