@@ -200,6 +200,44 @@ public class L44TrapWater {
      *
      * 时间复杂度：O(n)
      * 空间复杂度：O(n)
+     *
+     * 思维逻辑
+     *          由于每一步增加的水量为：Math.min(leftMax[i], rightMaxArray[i]) - height[i];
+     *           当 leftMax < rightMax时，水的容量由lefMax确定。否则由rightMax确定
+     *
+     *          当i=0，如果height[0] < height[height.length - 1]
+     *           leftMax[0] = height[0]
+     *           rightMax[0] = ?
+     *           rightMax[height.length - 1] = height[height.length - 1]
+     *           这时: rightMax[0] >=
+     *                       rightMax[height.length - 1] = height[height.length - 1]
+     *                       > height[0] = leftMax[0]
+     *                   即： rightMax[0] > leftMax[0]
+     *           所以 通过算leftMax[0] 计算水量即可
+     *           然后 left递增为1
+     *
+     *          如果 height[1] < height[height.length - 1]
+     *            leftMax[1] = max(height[0], heigth[1])
+     *            rightMax[1] = ?
+     *            rightMax[height.length - 1] = height[height.length - 1]
+     *           这时: rightMax[1] >=
+     *                       rightMax[height.length - 1] = height[height.length - 1]
+     *                       > max (height[0], height[1]) = leftMax[1]
+     *                   即： rightMax[1] > leftMax[1]
+     *           所以 通过算leftMax[1] 计算水量即可
+     *           然后 left递增为2
+     *           数学归纳法。。。
+     *
+     *          如果 height[1] >= height[height.length - 1]
+     *          rightMax[height.length - 1] = height[height.length - 1]
+     *            <= height[1] <= leftMax[1] <= leftMax[height.length - 1]
+     *
+     *            即：rightMax[height.length - 1] <= leftMax[height.length - 1]
+     *
+     *           所以 通过算rightMax[height.length - 1] 计算水量即可
+     *           然后 right递减为heigth.length -2
+     *
+     *           数学归纳法。。。
      */
     public int trap(int[] height) {
         int water = 0;
@@ -222,45 +260,6 @@ public class L44TrapWater {
         }
 
         return water;
-
-        /* 逻辑：
-         由于 每一步增加的水量为：Math.min(leftMax[i], rightMaxArray[i]) - height[i];
-          当 leftMax < rightMax时，水的容量由lefMax确定。否则由rightMax确定
-
-         当i=0，如果height[0] < height[height.length - 1]
-          leftMax[0] = height[0]
-          rightMax[0] = ?
-          rightMax[height.length - 1] = height[height.length - 1]
-          这时: rightMax[0] >=
-                      rightMax[height.length - 1] = height[height.length - 1]
-                      > height[0] = leftMax[0]
-                  即： rightMax[0] > leftMax[0]
-          所以 通过算leftMax[0] 计算水量即可
-          然后 left递增为1
-
-         如果 height[1] < height[height.length - 1]
-           leftMax[1] = max(height[0], heigth[1])
-           rightMax[1] = ?
-           rightMax[height.length - 1] = height[height.length - 1]
-          这时: rightMax[1] >=
-                      rightMax[height.length - 1] = height[height.length - 1]
-                      > max (height[0], height[1]) = leftMax[1]
-                  即： rightMax[1] > leftMax[1]
-          所以 通过算leftMax[1] 计算水量即可
-          然后 left递增为2
-          数学归纳法。。。
-
-         如果 height[1] >= height[height.length - 1]
-         rightMax[height.length - 1] = height[height.length - 1]
-           <= height[1] <= leftMax[1] <= leftMax[height.length - 1]
-
-           即：rightMax[height.length - 1] <= leftMax[height.length - 1]
-
-          所以 通过算rightMax[height.length - 1] 计算水量即可
-          然后 right递减为heigth.length -2
-
-          数学归纳法。。。
-         */
     }
 
 }
