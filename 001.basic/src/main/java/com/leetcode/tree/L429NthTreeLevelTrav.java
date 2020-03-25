@@ -16,6 +16,21 @@ public class L429NthTreeLevelTrav {
         }
 
         Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> currentLevel = new ArrayList<>(size);
+            result.add(currentLevel);
 
+            for (int i = 0; i < size; i++) {
+                Node node = queue.poll();
+                currentLevel.add(node.val);
+
+                if (node.children != null) {
+                    queue.addAll(node.children);
+                }
+            }
+        }
+        return result;
     }
 }

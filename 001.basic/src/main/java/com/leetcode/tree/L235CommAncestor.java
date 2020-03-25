@@ -42,12 +42,4 @@ public class L235CommAncestor {
         }
         return node;
     }
-
-    public void appendLeftChild(TreeNode node, TreeNode left) {
-        node.left = left;
-    }
-
-    public void appendRightChild(TreeNode node, TreeNode right) {
-        node.right = right;
-    }
 }

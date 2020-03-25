@@ -12,6 +12,13 @@ public class ListUtils {
         System.out.println("");
     }
 
+    public static ListNode makeList(ListNode ... nodes) {
+        for (int i = 0; i < nodes.length - 1; i++) {
+            nodes[i].next = nodes[i+1];
+        }
+        return nodes[0];
+    }
+
     public static ListNode makeList(int ... values) {
         ListNode head = ListNode.builder()
                 .val(values[0])
