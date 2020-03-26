@@ -11,15 +11,26 @@ public class L236CommAncestor {
     /**
      * 递归方法
      */
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        if (root == null || p == null || q == null) {
-            return null;
+    public TreeNode lowestCommonAncestor(TreeNode node, TreeNode p, TreeNode q) {
+        if (node == null || p == node || q == node) {
+            return node;
         }
 
+        TreeNode left = lowestCommonAncestor(node.left, p, q);
+        TreeNode right = lowestCommonAncestor(node.right, p, q);
+        if (left == null) {
+            return right;
+        }
+        if (right == null) {
+            return left;
+        }
 
-        return null;
+        return node;
     }
 
+    /**
+     * 迭代方法
+     */
     HashMap<TreeNode, TreeNode> parentMap = new HashMap<>();
     public TreeNode lowestCommonAncestor1(TreeNode root, TreeNode p, TreeNode q) {
         if (root == null || p == null || q == null) {
@@ -67,7 +78,7 @@ public class L236CommAncestor {
         }
     }
 
-    /*
+    /* 递归的dfs
     void dfs(TreeNode node) {
         if (node == null) {
             return;
