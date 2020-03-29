@@ -25,21 +25,22 @@ public class L22ParentheseGen {
             return result;
         }
 
-        dfs(n, n, "");
+        dfsTest(n, n, "");
         return result;
     }
 
-    void dfs(int left, int right, String tmp) {
-        if (left == 0 && right == 0) {
-            result.add(tmp);
+    private void dfsTest(int leftRemain, int rightRemain, String s) {
+        if (leftRemain == 0 && rightRemain == 0) {
+            result.add(s);
             return;
         }
 
-        if (left > 0) {
-            dfs(left - 1, right, tmp + "(");
+        if (leftRemain > 0) {
+            dfsTest(leftRemain - 1, rightRemain, s + "(");
         }
-        if (right > 0 && right > left) {
-            dfs(left, right - 1, tmp + ")");
+        if (rightRemain > 0 && rightRemain > leftRemain) {
+            dfsTest(leftRemain, rightRemain - 1, s + ")");
         }
     }
+
 }
