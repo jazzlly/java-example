@@ -28,6 +28,6 @@ public class L433MinGenTest {
         assertThat(new L433MinGen().minMutation(
                 "AAAAACCC",
                 "AACCCCCC",
-                new String[] {"AAAACCCC", "AAACCCCC", "AACCCCCC"} )).isEqualTo(1);
+                new String[] {"AAAACCCC", "AAACCCCC", "AACCCCCC"} )).isEqualTo(3);
     }
 }

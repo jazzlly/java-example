@@ -7,6 +7,7 @@ import java.util.Queue;
 
 public class BfsTmpl {
     Queue<TreeNode> queue = new LinkedList<>();
+
     void bfs(TreeNode node) {
         if (node == null) {
             return;
