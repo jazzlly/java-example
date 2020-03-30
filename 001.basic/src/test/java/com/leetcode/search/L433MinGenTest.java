@@ -30,4 +30,18 @@ public class L433MinGenTest {
                 "AACCCCCC",
                 new String[] {"AAAACCCC", "AAACCCCC", "AACCCCCC"} )).isEqualTo(3);
     }
+    /*
+    "AAAAAAAA"
+"CCCCCCCC"
+["AAAAAAAA","AAAAAAAC","AAAAAACC","AAAAACCC","AAAACCCC","AACACCCC","ACCACCCC","ACCCCCCC","CCCCCCCA"]
+     */
+    @Test
+    public void smoke4() {
+        assertThat(new L433MinGen().minMutation(
+                "AAAAAAAA",
+                "CCCCCCCC",
+                new String[] {"AAAAAAAA","AAAAAAAC","AAAAAACC","AAAAACCC",
+                        "AAAACCCC","AACACCCC","ACCACCCC","ACCCCCCC","CCCCCCCA"} ))
+                .isEqualTo(-1);
+    }
 }

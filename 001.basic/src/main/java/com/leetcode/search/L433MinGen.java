@@ -1,7 +1,5 @@
 package com.leetcode.search;
 
-import com.leetcode.tree.TreeNode;
-
 import java.util.*;
 
 /**
@@ -34,6 +32,7 @@ public class L433MinGen {
             return -1;
         }
 
+        System.out.println("end: " + end);
         int step = 0;
         Arrays.stream(bank).forEach(s -> bankSet.add(s));
 
@@ -43,7 +42,8 @@ public class L433MinGen {
             step++;
             System.out.println("step: " + step);
 
-            for (int levelCount = 0; levelCount < queue.size(); levelCount++) {
+            int queueSize = queue.size();
+            for (int levelCount = 0; levelCount < queueSize; levelCount++) {
                 String current = queue.poll();
                 for (int pos = 0; pos < start.length(); pos++) {
                     // 将current的第一个 变成 "A", "C", "G", "T"
@@ -55,12 +55,16 @@ public class L433MinGen {
                         }
                         chars[pos] = genChars[i];
                         String tmp = new String(chars);
-                        if (end.equals(tmp)) {
-                            System.out.println(tmp + ", found!");
-                            return step;
+
+                        if (!bankSet.contains(tmp)) {
+                            continue;
                         }
 
-                        if (bankSet.contains(tmp)) {
+                        if (end.equals(tmp)) {
+                            System.out.println(end + ", end!");
+                            System.out.println(tmp + ", found!");
+                            return step;
+                        } else {
                             System.out.println(tmp + ", queued!");
                             queue.add(tmp);
                             bankSet.remove(tmp);
