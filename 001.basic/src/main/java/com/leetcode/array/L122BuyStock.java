@@ -27,7 +27,7 @@ package com.leetcode.array;
  * 输出: 0
  * 解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
  */
-public class L22BuyStock {
+public class L122BuyStock {
 
     /**
      * 贪心法：明天的价格高于今天的价格，就买入
