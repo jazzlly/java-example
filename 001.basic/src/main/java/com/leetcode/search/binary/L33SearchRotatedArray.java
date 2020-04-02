@@ -2,78 +2,65 @@ package com.leetcode.search.binary;
 
 public class L33SearchRotatedArray {
 
-    public int search(int[] nums, int target) {
-        // todo:
-        return -1;
-    }
-
-    /**
-     *
-     * @param nums
-     * @param left 数组左边界， inclusive
-     * @param right 数组有边界，inclusive
-     * @param target
-     * @return
-     */
-    public int binarySearch(int[] nums, int left, int right, int target) {
-        if (nums == null || nums.length == 0) {
-            return -1;
-        }
-        if (left < 0) {
-            left = 0;
-        }
-        if (right > nums.length -1) {
-            right = nums.length -1;
-        }
-
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-
-            if (nums[mid] == target) {
-                return mid;
-            }
-
-            if (target < nums[mid]) {
-                right = mid - 1;
-            } else {
-                left = mid + 1;
-            }
-        }
-
-        return -1;
-    }
-
-    /**
-     * 找到旋转数组的下标
-     * @param rotatedArray
-     * @return
-     */
-    int findPivot(int[] rotatedArray) {
-        if (rotatedArray == null || rotatedArray.length == 0) {
-            return 0;
-        }
-
+    public int findPivot(int[] nums) {
         int left = 0;
-        int right = rotatedArray.length -1;
+        int right = nums.length - 1;
 
-        // 没有rotate 或是rotate了0
-        if (rotatedArray[left] < rotatedArray[right]) {
+        if (nums[left] < nums[right])
             return 0;
-        }
 
         while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (rotatedArray[mid] > rotatedArray[mid + 1]) {
-                return mid + 1;
-            }
-
-            if (rotatedArray[mid] > rotatedArray[left]) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
+            int pivot = (left + right) / 2;
+            if (nums[pivot] > nums[pivot + 1])
+                return pivot + 1;
+            else {
+                if (nums[pivot] < nums[left])
+                    right = pivot - 1;
+                else
+                    left = pivot + 1;
             }
         }
+        return 0;
+    }
 
+    public int search(int[] nums, int left, int right, int target) {
+        while (left <= right) {
+            int pivot = left + (right - left) / 2;
+            if (nums[pivot] == target)
+                return pivot;
+            else {
+                if (target < nums[pivot])
+                    right = pivot - 1;
+                else
+                    left = pivot + 1;
+            }
+        }
         return -1;
+    }
+
+    public int search(int[] nums, int target) {
+        int n = nums.length;
+
+        if (n == 0)
+            return -1;
+        if (n == 1)
+            return nums[0] == target ? 0 : -1;
+
+        int rotate_index = findPivot(nums);
+
+        // if target is the smallest element
+        if (nums[rotate_index] == target)
+            return rotate_index;
+        // if array is not rotated, search in the entire array
+        if (rotate_index == 0)
+            return search(nums, 0, n - 1, target);
+
+        if (target < nums[0])
+            // search in the right side
+            return search(nums, rotate_index, n - 1, target);
+
+        // search in the left side
+        return search(nums, 0, rotate_index, target);
     }
 }
+
