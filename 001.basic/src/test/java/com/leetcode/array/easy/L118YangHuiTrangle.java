@@ -17,8 +17,29 @@ import java.util.List;
  * ]
  */
 public class L118YangHuiTrangle {
-    public List<List<Integer>> generate(int numRows) {
-        List<List<Integer>> result = new ArrayList<>();
+    List<List<Integer>> result = new ArrayList<>();
 
+    public List<List<Integer>> generate(int numRows) {
+        for (int i = 0; i < numRows; i++) {
+            List<Integer> line = new ArrayList<>();
+            for (int j = 0; j <= i; j++) {
+                line.add(getResult(i, j));
+            }
+            result.add(line);
+        }
+        return result;
+    }
+
+    private Integer getResult(int row, int col) {
+        int prevRow = row - 1;
+        int prevCol = col - 1;
+        if (prevRow < 0 || prevCol < 0) {
+            return 1;
+        }
+
+        List<Integer> prevLine = result.get(prevRow);
+        int a = prevCol >= 0 ? prevLine.get(prevCol) : 0;
+        int b = col < prevLine.size() ? prevLine.get(col) : 0;
+        return a + b;
     }
 }
