@@ -36,6 +36,7 @@ public class L433MinGen {
         int step = 0;
         Arrays.stream(bank).forEach(s -> bankSet.add(s));
 
+        // 数据建模：思路是穷举出所有基因，图的节点是基因序列，图的边是基因库的成员
         // 典型的bfs模板
         queue.add(start);
         while (!queue.isEmpty()) {
