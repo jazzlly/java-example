@@ -29,4 +29,14 @@ public class L91NumDecodingTest {
     public void smoke2() {
         assertThat(test.numDecodings("226")).isEqualTo(3);
     }
+
+    @Test
+    public void decodeChars() {
+        String s = "123";
+        char[] chars = new char[s.length() + 1];
+        s.getChars(0, s.length(), chars, 1);
+        for (int i = 0; i < chars.length; i++) {
+            System.out.println(chars[i]);
+        }
+    }
 }
