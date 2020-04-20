@@ -28,7 +28,7 @@ public class L91NumDecoding {
      *  dp[i] = dp[i-1] + dp[i-2]
      *  考虑分支场景：
      *  s[i] = '0' 不能添加 dp[i-1]
-     *  s[i-1][i] 不在 [1,26], 不能添加dp[i-2]
+     *  s[i-1][i] 不在 [10,26], 不能添加dp[i-2]
      *
      * 假设输入数字序列为
      *     null  null |  1       1       2       1       2    1
@@ -65,6 +65,7 @@ public class L91NumDecoding {
         return dp[dp.length - 1];
     }
 
+
     public int numDecodings(String s) {
         if (s == null || s.length() == 0) {
             return 0;
@@ -74,7 +75,37 @@ public class L91NumDecoding {
         int dp1 = 1;
         int dp2 = 0;
 
-        for (int i = 0; i < s.length(); i++) {
+        s = "0" + s;
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) != '0') {
+                dp2 += dp1;
+            }
+
+            char cprev = s.charAt(i-1);
+            char ci = s.charAt(i);
+            if (cprev == '1' ||
+                    (cprev == '2' && (ci >= '0' && ci <= '6'))) {
+                dp2 += dp0;
+            }
+
+            dp0 = dp1;
+            dp1 = dp2;
+            dp2 = 0;
+        }
+
+        return dp1;
+    }
+
+    public int numDecodings2(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+
+        int dp0 = 1;
+        int dp1 = 1;
+        int dp2 = 0;
+
+        for (int i = 1; i < s.length(); i++) {
             if (s.charAt(i) != '0') {
                 dp2 += dp1;
             }
