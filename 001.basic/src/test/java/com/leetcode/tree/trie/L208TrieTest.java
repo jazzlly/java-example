@@ -33,4 +33,53 @@ public class L208TrieTest {
         Trie trie = new Trie();
         assertThat(trie.search("a")).isFalse();
     }
+
+    @Test
+    public void deleteSmoke() {
+        Trie trie = new Trie();
+
+        trie.insert("a");
+        trie.insert("ab");
+        trie.insert("abc");
+
+        trie.remove("ab");
+        assertThat(trie.search("ab")).isFalse();
+        assertThat(trie.startsWith("ab")).isTrue();
+        assertThat(trie.search("abc")).isTrue();
+
+        assertThat(trie.remove("abc")).isTrue();
+        assertThat(trie.startsWith("ab")).isFalse();
+        assertThat(trie.search("a")).isTrue();
+        assertThat(trie.startsWith("a")).isTrue();
+
+    }
+
+    @Test
+    public void b() {
+        Trie trie = new Trie();
+        assertThat(trie.childrenCount).isEqualTo(0);
+        assertThat(trie.isEnd).isFalse();
+
+        trie.insert("a");
+        assertThat(trie.childrenCount).isEqualTo(1);
+        assertThat(trie.isEnd).isFalse();
+
+        assertThat(trie.remove("")).isFalse();
+        assertThat(trie.remove("b")).isFalse();
+        assertThat(trie.remove("a")).isTrue();
+
+        assertThat(trie.childrenCount).isEqualTo(0);
+        assertThat(trie.isEnd).isFalse();
+
+        trie.insert("a");
+        trie.insert("ab");
+        trie.insert("abc");
+
+        trie.remove("ab");
+        assertThat(trie.search("ab")).isFalse();
+        assertThat(trie.search("abc")).isTrue();
+
+
+
+    }
 }

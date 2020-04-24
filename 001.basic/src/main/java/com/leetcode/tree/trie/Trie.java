@@ -1,5 +1,8 @@
 package com.leetcode.tree.trie;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Trie
  *
@@ -31,12 +34,18 @@ public class Trie {
     /**
      * 是否是叶子节点
      */
-    boolean isLeafNode;
+    boolean isEnd;
+
+    /**
+     * 是否有子孙
+     */
+    int childrenCount;
 
     /** Initialize your data structure here. */
     public Trie() {
         children = new Trie[26];
-        isLeafNode = false;
+        isEnd = false;
+        childrenCount = 0;
     }
 
     /** Inserts a word into the trie. */
@@ -48,16 +57,17 @@ public class Trie {
             char c = word.charAt(i);
             if (tmp.children[c - 'a'] == null) {
                 tmp.children[c - 'a'] = new Trie();
+                tmp.childrenCount++;
             }
             tmp = tmp.children[c - 'a'];
         }
-        tmp.isLeafNode = true;
+        tmp.isEnd = true;
     }
 
     /** Returns if the word is in the trie. */
     public boolean search(String word) {
         Trie trie = startWithInner(word);
-        return trie != null ? trie.isLeafNode : false;
+        return trie != null ? trie.isEnd : false;
     }
 
     /** Returns if there is any word in the trie that starts with the given prefix. */
@@ -65,6 +75,44 @@ public class Trie {
         return startWithInner(prefix) != null;
     }
 
+    public boolean remove(String prefix) {
+        assert prefix != null;
+        List<Trie> tries = new ArrayList<>();
+
+        Trie tmp = this;
+        tries.add(tmp);
+        for (int i = 0; i < prefix.length(); i++) {
+            char c = prefix.charAt(i);
+            tmp = tmp.children[c - 'a'];
+            if (tmp == null) {
+                return false;
+            }
+            tries.add(tmp);
+        }
+
+        if (!tmp.isEnd) {
+            return false;
+        }
+
+        for (int i = prefix.length() - 1; i >= 0; i--) {
+            char c = prefix.charAt(i);
+            Trie current = tries.get(i);
+            Trie next = current.children[c - 'a'];
+
+            if (next.childrenCount > 0) {
+                next.isEnd = false;
+                return true;
+            }
+
+            current.children[c - 'a'] = null;
+            current.childrenCount--;
+            if (current.childrenCount > 0) {
+                return true;
+            }
+        }
+
+        return true;
+    }
     Trie startWithInner(String prefix) {
         assert prefix != null;
 
