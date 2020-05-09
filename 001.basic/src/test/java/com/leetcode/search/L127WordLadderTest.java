@@ -3,6 +3,8 @@ package com.leetcode.search;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,5 +29,13 @@ wordList = ["hot","dot","dog","lot","log","cog"]
             .isEqualTo(5);
         ;
 
+    }
+
+    @Test
+    public void setTest() {
+        Set<String> s1 = new HashSet<>(Arrays.asList("1"));
+        Set<String> s2 = new HashSet<>(Arrays.asList("2"));
+        System.out.println(s1.retainAll(s2));
+        System.out.println(s1);
     }
 }
