@@ -17,7 +17,6 @@ public class L27RemoveElementTest {
         // nums = [0,1,2,2,3,0,4,2], val = 2,
         nums = new int[] {0,1,2,2,3,0,4,2};
         assertThat(test.removeElement(nums, 2)).isEqualTo(5);
-
     }
 
 
