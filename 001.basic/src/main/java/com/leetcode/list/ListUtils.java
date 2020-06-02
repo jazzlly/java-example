@@ -12,6 +12,14 @@ public class ListUtils {
         System.out.println("");
     }
 
+    public static void printList(ListNode head, int count) {
+        while (head != null && count-- > 0) {
+            System.out.print(head.val + "->");
+            head = head.next;
+        }
+        System.out.println("");
+    }
+
     public static ListNode makeList(ListNode ... nodes) {
         for (int i = 0; i < nodes.length - 1; i++) {
             nodes[i].next = nodes[i+1];
