@@ -25,7 +25,7 @@ public class L26RemoveDupNumFromSortedArray {
      * @param nums
      * @return
      */
-    public static int removeDuplicates(int[] nums) {
+    public static int removeDuplicates1(int[] nums) {
         assert nums != null;
         if (nums.length == 0) {
             return 0;
@@ -42,4 +42,37 @@ public class L26RemoveDupNumFromSortedArray {
         }
         return slow + 1;
     }
+
+
+    /**
+     * [0,0,1,1,1,2,2,3,3,4],
+     * [0,1,2,3,4]
+     * 0 1 2 3 0 0 1 1 2 2 2 3
+     * 1 1
+     * @param nums
+     * @return
+     */
+
+    public int removeDuplicates(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        int slow = 0;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[slow] == nums[i]) {
+                continue;
+            } else {
+                nums[++slow] = nums[i];
+            }
+        }
+        return slow + 1;
+    }
+
+
+
+
+
+
+
 }

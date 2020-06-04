@@ -57,7 +57,7 @@ public class L88MergeSortedArray {
      * 双指针，从后向前。利用了nums1最后的n个0作为临时空间
      * 时间复杂度 O(n), 空间复杂度O(1)
      */
-    public void merge(int[] nums1, int m, int[] nums2, int n) {
+    public void merge2(int[] nums1, int m, int[] nums2, int n) {
         int tail1 = m - 1;
         int tail2 = n - 1;
         int tail = m + n -1;
@@ -77,4 +77,28 @@ public class L88MergeSortedArray {
             System.arraycopy(nums2, 0, nums1, 0, tail2 + 1);
         }
     }
+
+
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int c1 = m - 1;
+        int c2 = n - 1;
+
+        for (int i = m + n - 1; i >= 0 ; i--) {
+            if (c1 < 0) {
+                nums1[i] = nums2[c2--];
+                continue;
+            }
+            if (c2 < 0) {
+                nums1[i] = nums1[c1--];
+                continue;
+            }
+            if (nums1[c1] > nums2[c2]) {
+                nums1[i] = nums1[c1--];
+            } else {
+                nums1[i] = nums2[c2--];
+            }
+        }
+    }
+
+
 }

@@ -11,7 +11,7 @@ package com.leetcode.list;
  */
 public class L21MergeTwoLists {
 
-    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    public ListNode mergeTwoLists1(ListNode l1, ListNode l2) {
         // 临时头节点
         ListNode head = new ListNode();
         // 游标节点
@@ -39,4 +39,40 @@ public class L21MergeTwoLists {
 
         return head.next;
     }
+
+
+
+
+
+
+
+
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode head = new ListNode();
+        ListNode current = head;
+
+        while (l1 != null || l2 != null) {
+            if (l1 == null) {
+                current.next = l2;
+                break;
+            }
+            if (l2 == null) {
+                current.next = l1;
+                break;
+            }
+
+            if (l1.val < l2.val) {
+                current.next = l1;
+                current = l1;
+                l1 = l1.next;
+            } else {
+                current.next = l2;
+                current = l2;
+                l2 = l2.next;
+            }
+        }
+
+        return head.next;
+    }
+
 }

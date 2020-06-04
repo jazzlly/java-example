@@ -31,107 +31,100 @@ import java.util.List;
  */
 public class L151ReverseWord {
 
-    char[] chars;
-    int charsLen;
     int spaceCount;
 
-    /*
-    public String reverseWords(String s) {
-        List<String> words = Arrays.asList(s.split("\\s+"));
+    /**
+     * 使用语言特性解答
+     * @param s
+     * @return
+     */
+    public String reverseWords1(final String s) {
+        final List<String> words = Arrays.asList(s.trim().split("\\s+"));
         Collections.reverse(words);
         return String.join(" ", words);
-    }*/
+    }
 
-    public String reverseWords(String s) {
+    public String reverseWords(final String s) {
         assert s != null;
 
-        removeSpaces(s);
-        if (charsLen == 0) {
+        final StringBuilder builder = removeSpaces(s);
+        if (builder.length() == 0 || spaceCount == 0) {
             return "";
         }
 
-        if (spaceCount == 0) {
-            return new String(chars, 0, charsLen);
-        }
-
-        reverseChars(chars, 0, charsLen - 1);
+        reverseString(builder, 0, builder.length() - 1);
 
         int begin = 0;
-        for (int i = 0; i < charsLen; i++) {
-            if (chars[i] == ' ') {
-                reverseChars(chars, begin, i - 1);
+        for (int i = 0; i < builder.length(); i++) {
+            if (builder.charAt(i) == ' ') {
+                reverseString(builder, begin, i - 1);
                 begin = i + 1;
             }
         }
-        if (begin < charsLen - 1) {
-            reverseChars(chars, begin, charsLen - 1);
+        if (begin < builder.length() - 1) {
+            reverseString(builder, begin, builder.length() - 1);
         }
 
-        return new String(chars, 0, charsLen);
+        return builder.toString();
     }
 
-    // 对输入进行预处理, trim, 去掉重复空格
-    public String removeSpaces(String s) {
-        assert s != null;
+    /**
+     * 对输入进行预处理, trim, 去掉重复空格
+     * 
+     * @param s
+     * @return
+     */
+    public StringBuilder removeSpaces(final String s) {
+        final StringBuilder builder = new StringBuilder();
 
-        chars = new char[s.length()];
-        charsLen = s.length();
-
-        if (charsLen == 0) {
-            return "";
-        }
-
-        int cursor = -1;
         char current = ' ';
         char prev = ' ';
-
         for (int i = 0; i < s.length(); i++) {
             current = s.charAt(i);
             if (current == ' ' && prev == ' ') {
                 continue;
             }
 
-            chars[++cursor] = current;
+            builder.append(current);
             prev = current;
             if (current == ' ') {
                 spaceCount++;
             }
         }
 
-        if (cursor == -1) {
-            charsLen = cursor + 1;
-            return "";
+        if (builder.length() == 0) {
+            return builder;
         }
 
-        if (chars[cursor] == ' ') {
-            cursor--;
+        if (builder.charAt(builder.length() - 1) == ' ') {
+            builder.deleteCharAt(builder.length() - 1);
         }
-
-        charsLen = cursor + 1;
-        return new String(chars, 0, charsLen);
+        return builder;
     }
 
-    void reverseChars(char[] array, int begin, int end) {
+    void reverseString(final StringBuilder builder, int begin, int end) {
         while (begin < end) {
-            char tmp = array[begin];
-            array[begin] = array[end];
-            array[end] = tmp;
-            begin++;
-            end--;
+            final char tmp = builder.charAt(begin);
+            builder.setCharAt(begin++, builder.charAt(end));
+            builder.setCharAt(end--, tmp);
         }
     }
 
-    public static void main(String[] args) {
-        L151ReverseWord test = new L151ReverseWord();
+    public static void main(final String[] args) {
+        final L151ReverseWord test = new L151ReverseWord();
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append("foobar");
+        test.reverseString(builder, 0, builder.length() - 1);
+        assertThat(builder.toString()).isEqualTo("raboof");
+
         assertThat(test.reverseWords(" ")).isEqualTo("");
-
-        assertThat(test.removeSpaces("  hello,  not   smoke!    ")).isEqualTo("hello, not smoke!");
-
-        assertThat(test.removeSpaces("")).isEqualTo("");
-        assertThat(test.removeSpaces(" ")).isEqualTo("");
-        assertThat(test.removeSpaces("  ")).isEqualTo("");
-        assertThat(test.removeSpaces("   ")).isEqualTo("");
-        assertThat(test.removeSpaces(" xx ssx ")).isEqualTo("xx ssx");
+        assertThat(test.removeSpaces("  hello,  not   smoke!    ").toString()).isEqualTo("hello, not smoke!");
+        assertThat(test.removeSpaces("").toString()).isEqualTo("");
+        assertThat(test.removeSpaces(" ").toString()).isEqualTo("");
+        assertThat(test.removeSpaces("  ").toString()).isEqualTo("");
+        assertThat(test.removeSpaces("   ").toString()).isEqualTo("");
+        assertThat(test.removeSpaces(" xx ssx ").toString()).isEqualTo("xx ssx");
 
         assertThat(test.reverseWords("")).isEqualTo("");
         assertThat(test.reverseWords(" ")).isEqualTo("");

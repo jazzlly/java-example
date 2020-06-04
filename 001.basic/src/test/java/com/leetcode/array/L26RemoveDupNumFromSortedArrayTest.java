@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class L26RemoveDupNumFromSortedArrayTest {
 
+    /*
     @Test
     public void test() {
         int[] array = new int[]{1,1,2};
@@ -24,4 +25,6 @@ public class L26RemoveDupNumFromSortedArrayTest {
         assertThat(Arrays.copyOfRange(array, 0, 5))
                 .containsExactly(0,1,2,3,4);
     }
+
+     */
 }
