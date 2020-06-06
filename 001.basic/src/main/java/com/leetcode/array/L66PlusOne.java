@@ -23,7 +23,7 @@ public class L66PlusOne {
     /**
      * 时间复杂度 O(n), 空间复杂度: 一般情况O(1), 特殊情况O(n)
      */
-    public int[] plusOne(int[] digits) {
+    public int[] plusOne1(int[] digits) {
         for (int i = digits.length - 1; i >= 0; i--) {
             digits[i]++;
 
@@ -39,6 +39,22 @@ public class L66PlusOne {
 
         // 最高位发生进位
         int[] ret = new int[digits.length+1];
+        ret[0] = 1;
+        return ret;
+    }
+
+    public int[] plusOne(int[] digits) {
+        int c = 1;  // 进位
+        for (int i = digits.length - 1; i >= 0; i--) {
+            digits[i] = digits[i] + c;
+            if (digits[i] < 10) {
+                return digits;
+            }
+            digits[i] = 0;
+            c = 1;
+        }
+
+        int[] ret = new int[digits.length + 1];
         ret[0] = 1;
         return ret;
     }

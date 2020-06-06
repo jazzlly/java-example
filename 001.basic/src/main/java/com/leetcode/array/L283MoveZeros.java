@@ -13,7 +13,7 @@ public class L283MoveZeros {
     /**
      * 快慢指针方法
      */
-    public static void moveZeroes(int[] nums) {
+    public static void moveZeroes3(int[] nums) {
         assert nums != null;
 
         int slow = 0;
@@ -65,4 +65,24 @@ public class L283MoveZeros {
             }
         }
     }
+
+
+    public void moveZeroes(int[] nums) {
+        if (nums == null) {
+            return;
+        }
+
+        int zeroCount = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                zeroCount++;
+                continue;
+            }
+            if (zeroCount > 0) {
+                nums[i - zeroCount] = nums[i];
+                nums[i] = 0;
+            }
+        }
+    }
+
 }
