@@ -19,24 +19,28 @@ package com.leetcode.tree;
  * 返回它的最大深度 3 。
  */
 public class L104BinaryTreeMaxDepth {
-    int maxDepth = 0;
+
     public int maxDepth(TreeNode root) {
-        if (root == null) {
-            return 0;
-        }
-
-        dfs(root, 0);
-        return maxDepth + 1;
+        return recursion(root, 0);
     }
 
-    private void dfs(TreeNode node, int level) {
+    int recursion(TreeNode node, int level) {
         if (node == null) {
-            return;
+            return level;
         }
-        if (level > maxDepth) {
-            maxDepth = level;
-        }
-        dfs(node.left, level + 1);
-        dfs(node.right, level + 1);
+
+        int leftLevel = recursion(node.left, level + 1);
+        int rightLevel = recursion(node.right, level + 1);
+        return Math.max(leftLevel, rightLevel);
     }
+
+
+
+
+
+
+
+
+
+
 }

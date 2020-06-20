@@ -1,9 +1,6 @@
 package com.leetcode.queue;
 
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * 239. 滑动窗口最大值
@@ -22,7 +19,7 @@ public class L239SlidingWindow {
      * 执行用时 : 102 ms, 在所有 Java 提交中击败了5.10%的用户
      * 内存消耗 :47.5 MB, 在所有 Java 提交中击败了5.03%的用户
      */
-    public static int[] maxSlidingWindow(int[] nums, int k) {
+    public static int[] maxSlidingWindow1(int[] nums, int k) {
         if (k == 0 || nums.length == 0) {
             return new int[]{};
         }
@@ -50,7 +47,7 @@ public class L239SlidingWindow {
      * @param k
      * @return
      */
-    public static int[] maxSlidingWindowDqueue(int[] nums, int k) {
+    public static int[] maxSlidingWindowDqueue2(int[] nums, int k) {
         if (k == 0 || nums.length == 0) {
             return new int[]{};
         }
@@ -77,4 +74,60 @@ public class L239SlidingWindow {
         }
         return result;
     }
+
+    /**
+     * 单调队列解法
+     * 所谓单调队列，就是一个双端队列，队列数据按照降序排列
+     * 队列头是最大值
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int[] ret = new int[nums.length - k + 1];
+
+        Deque<Integer> deque = new LinkedList<>();
+        for (int i = 0; i < nums.length; i++) {
+            while (deque.peekLast() != null && nums[i] > deque.peekLast()) {
+                deque.pollLast();
+            }
+            deque.addLast(nums[i]);
+
+            int prevIndex = i - k + 1;
+            if (prevIndex >= 0) {
+                ret[prevIndex] = deque.getFirst(); // 获取最大值
+                if (deque.getFirst().equals(nums[prevIndex])) {
+                    deque.pollFirst();
+                }
+            }
+        }
+        return ret;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
