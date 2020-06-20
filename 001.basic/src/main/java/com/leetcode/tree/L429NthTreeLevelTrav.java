@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class L429NthTreeLevelTrav {
 
-    public List<List<Integer>> levelOrder(Node root) {
+    public List<List<Integer>> levelOrder1(Node root) {
         List<List<Integer>> result = new ArrayList<>();
         if (root == null) {
             return result;
@@ -33,4 +33,52 @@ public class L429NthTreeLevelTrav {
         }
         return result;
     }
+
+    public List<List<Integer>> levelOrder(Node root) {
+        List<List<Integer>> ret = new ArrayList<>();
+        if (root == null) {
+            return ret;
+        }
+
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            List<Integer> level = new ArrayList<>();
+            List<Node> nodes = new ArrayList<>();
+
+            while (!queue.isEmpty()) {
+                Node node = queue.poll();
+                level.add(node.val);
+                nodes.add(node);
+            }
+            ret.add(level);
+
+            for (Node node : nodes) {
+                if (node.children == null) {
+                    continue;
+                }
+                for (Node child : node.children) {
+                    queue.add(child);
+                }
+            }
+        }
+        return ret;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

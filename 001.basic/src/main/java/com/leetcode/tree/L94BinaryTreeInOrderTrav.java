@@ -35,31 +35,99 @@ public class L94BinaryTreeInOrderTrav {
         recursion(node.right);
     }
 
-    public List<Integer> inorderTraversal(TreeNode root) {
-        TreeNode node = root;
+    public List<Integer> inorderTraversal2(TreeNode root) {
+        List<Integer> ret = new ArrayList<>();
         Stack<TreeNode> stack = new Stack<>();
-        Set<TreeNode> nodeSet = new HashSet<>();
 
-        while (node != null) {
-            while (!nodeSet.contains(node) && node.left != null) {
-                stack.push(node);
-                nodeSet.add(node);
-                node = node.left;
-            }
-            result.add(node.val);
+        // 保存左子树已经遍历过的节点
+        Set<TreeNode> leftChecked = new HashSet<>();
 
-            if (node.right != null) {
-                node = node.right;
+        TreeNode current = root;
+        while (current != null) {
+            // 遍历左子树
+            if (!leftChecked.contains(current) && current.left != null) {
+                stack.push(current);
+                leftChecked.add(current);
+                current = current.left;
                 continue;
             }
 
-            if (stack.isEmpty()) {
-                break;
+            // 添加根节点
+            ret.add(current.val);
+            // leftChecked.add(current);
+
+            // 遍历右子树
+            if (current.right != null) {
+                current = current.right;
+                continue;
             }
 
-            node = stack.pop();
+            current = stack.empty() ? null : stack.pop();
         }
-        return result;
+
+        return ret;
+    }
+
+    public List<Integer> inorderTraversal3(TreeNode root) {
+        List<Integer> ret = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode current = root;
+
+        while (current != null || !stack.empty()) {
+            // 左边节点都依次入栈
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+
+            current = stack.pop();
+            ret.add(current.val);
+            current = current.right;
+        }
+
+        return ret;
+    }
+
+    // 染色算法
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> ret = new ArrayList<>();
+        if (root == null) {
+            return ret;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        Stack<Integer> colorStack = new Stack<>(); // 0: 新节点, 1: 老节点
+
+        stack.push(root);
+        colorStack.push(0);
+
+        while (!stack.empty()) {
+            TreeNode node = stack.pop();
+            int color = colorStack.pop();
+            switch (color) {
+                case 0:     // 新节点
+                    if (node.right != null) {
+                        stack.push(node.right);
+                        colorStack.push(0);
+                    }
+
+                    stack.push(node);
+                    colorStack.push(1);
+
+                    if (node.left != null) {
+                        stack.push(node.left);
+                        colorStack.push(0);
+                    }
+                    break;
+                case 1:
+                    ret.add(node.val);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return ret;
     }
 
 }
