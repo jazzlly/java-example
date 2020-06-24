@@ -1,7 +1,6 @@
 package com.leetcode.tree;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 653. 两数之和 IV - 输入 BST
@@ -41,13 +40,13 @@ public class L653TwoSumBst {
     boolean found = false;
     Set<Integer> set = new HashSet<>();
 
-    public boolean findTarget(TreeNode root, int k) {
+    public boolean findTarget1(TreeNode root, int k) {
         target = k;
-        recursion(root);
+        recursion1(root);
         return found;
     }
 
-    private void recursion(TreeNode node) {
+    private void recursion1(TreeNode node) {
         if (node == null || found) {
             return;
         }
@@ -58,7 +57,42 @@ public class L653TwoSumBst {
         }
         set.add(target - node.val);
 
-        recursion(node.left);
-        recursion(node.right);
+        recursion1(node.left);
+        recursion1(node.right);
     }
+
+    public boolean findTarget(TreeNode root, int k) {
+        Deque<TreeNode> deque = new LinkedList<>();
+        recursion(root, deque);
+
+        while (!deque.isEmpty()) {
+            TreeNode first = deque.peekFirst();
+            TreeNode last = deque.peekLast();
+            if (first == null || last == null || first == last) {
+                break;
+            }
+
+            int sum = first.val + last.val;
+            if (k == sum) {
+                return true;
+            } else if (sum > k) {
+                deque.pollLast();
+            } else {
+                deque.pollFirst();
+            }
+        }
+
+        return false;
+    }
+
+    private void recursion(TreeNode node, Deque<TreeNode> deque) {
+        if (node == null) {
+            return;
+        }
+
+        recursion(node.left, deque);
+        deque.add(node);
+        recursion(node.right, deque);
+    }
+
 }
