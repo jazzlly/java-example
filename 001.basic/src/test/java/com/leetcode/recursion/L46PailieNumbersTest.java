@@ -13,6 +13,6 @@ public class L46PailieNumbersTest {
         L46PailieNumbers test = new L46PailieNumbers();
         List<List<Integer>> ret = test.permute(new int[] {1, 2, 3});
 
-        System.out.println("haha");
+        System.out.println(ret.toString());
     }
 }

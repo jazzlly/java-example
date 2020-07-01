@@ -41,7 +41,7 @@ public class L46PailieNumbers {
 
     }
 
-    public List<List<Integer>> permute(int[] nums) {
+    public List<List<Integer>> permute2(int[] nums) {
         List<List<Integer>> ret = new ArrayList<>();
         Set<Integer> remaining = new HashSet<>();
         for (int num : nums) {
@@ -71,30 +71,29 @@ public class L46PailieNumbers {
         }
     }
 
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+            return ans;
+        }
+        recursion(nums, new LinkedList<>(), ans);
+        return ans;
+    }
 
+    void recursion(int[] nums, LinkedList<Integer> path, List<List<Integer>> ans) {
+        if (path.size() == nums.length) {
+            ans.add(new ArrayList<>(path));
+            return;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        Set<Integer> tmp = new HashSet<>(path);
+        for (int i = 0; i < nums.length; i++) {
+            if (tmp.contains(nums[i])) {
+                continue;
+            }
+            path.addLast(nums[i]);
+            recursion(nums, path, ans);
+            path.removeLast();
+        }
+    }
 }
