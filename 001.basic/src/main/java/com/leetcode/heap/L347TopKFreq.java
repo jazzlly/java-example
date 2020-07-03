@@ -1,9 +1,6 @@
 package com.leetcode.heap;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * 347. 前 K 个高频元素
@@ -26,7 +23,7 @@ import java.util.PriorityQueue;
  * 你可以按任意顺序返回答案。
  */
 public class L347TopKFreq {
-    public int[] topKFrequent(int[] nums, int k) {
+    public int[] topKFrequent1(int[] nums, int k) {
         Map<Integer, Integer> map = new HashMap<>();
 
         for (int num : nums) {
@@ -43,6 +40,7 @@ public class L347TopKFreq {
             }
 
             // 堆满了
+
             if (map.get(queue.peek()) >= map.get(key)) {
                 continue;
             }

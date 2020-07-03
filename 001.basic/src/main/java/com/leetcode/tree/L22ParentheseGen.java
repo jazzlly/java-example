@@ -24,28 +24,59 @@ import java.util.List;
  */
 public class L22ParentheseGen {
 
-    List<String> result = new ArrayList<>();
+    List<String> ans = new ArrayList<>();
     public List<String> generateParenthesis(int n) {
-        if (n == 0) {
-            return result;
+        if (n <= 0) {
+            return ans;
         }
 
-        dfsTest(n, n, "");
-        return result;
+        recursion("", 0, 0, n);
+        return ans;
     }
 
-    private void dfsTest(int leftRemain, int rightRemain, String s) {
-        if (leftRemain == 0 && rightRemain == 0) {
-            result.add(s);
+
+    void recursion(String current, int leftCnt, int rightCnt, int n) {
+        if (leftCnt == n && rightCnt == n) {
+            ans.add(current);
             return;
         }
 
-        if (leftRemain > 0) {
-            dfsTest(leftRemain - 1, rightRemain, s + "(");
+        if (leftCnt < n) {
+            recursion(current + "(", leftCnt + 1, rightCnt, n);
         }
-        if (rightRemain > 0 && rightRemain > leftRemain) {
-            dfsTest(leftRemain, rightRemain - 1, s + ")");
+        if (rightCnt < leftCnt) {
+            recursion(current + ")", leftCnt, rightCnt + 1, n);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

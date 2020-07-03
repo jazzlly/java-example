@@ -61,6 +61,12 @@ public class L752Lock {
 
         int step = 0;
         while (!queue1.isEmpty() && !queue2.isEmpty()) {
+            if (queue1.size() > queue2.size()) {
+                Queue q = queue1;
+                queue1 = queue2;
+                queue2 = q;
+            }
+
             int size = queue1.size();
             Set<String> tmp = new HashSet<>(queue2);
 
@@ -78,22 +84,22 @@ public class L752Lock {
                 visited.add(current);
                 for (int pos = 0; pos < 4; pos++) {
                     for (int dir = -1; dir <= 1; dir += 2) {
-                        String next = nextMove(current, pos, dir);
+                        String next = flipLock(current, pos, dir);
                         queue1.add(next);
                     }
                 }
             }
 
             step++;
-
-            if (queue1.size() > queue2.size()) {
-                Queue q = queue1;
-                queue1 = queue2;
-                queue2 = q;
-            }
         }
 
         return -1;
+    }
+
+    static String flipLock(String lock, int pos, int direction) {
+        StringBuilder sb = new StringBuilder(lock);
+        sb.setCharAt(pos, (char) ((sb.charAt(pos) - '0' + 10 + direction) % 10 + '0'));
+        return sb.toString();
     }
 
     private static String nextMove(String current, int pos, int dir) {
@@ -135,9 +141,10 @@ public class L752Lock {
         System.out.println("1".substring(0));
         System.out.println("1".substring(0,0));
 
-        System.out.println(nextMove("0000", 0, -1));
-        System.out.println(nextMove("0000", 0, 1));
-        System.out.println(nextMove("0000", 3, -1));
-        System.out.println(nextMove("0000", 3, 1));
+        System.out.println(flipLock("0000", 0, -1));
+        System.out.println(flipLock("0000", 0, 1));
+        System.out.println(flipLock("0000", 3, -1));
+        System.out.println(flipLock("0000", 3, 1));
     }
+
 }

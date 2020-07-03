@@ -36,6 +36,7 @@ import java.util.*;
  */
 public class L653TwoSumBst {
 
+    /*
     int target = 0;
     boolean found = false;
     Set<Integer> set = new HashSet<>();
@@ -93,6 +94,57 @@ public class L653TwoSumBst {
         recursion(node.left, deque);
         deque.add(node);
         recursion(node.right, deque);
+    }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public boolean findTarget(TreeNode root, int k) {
+        List<Integer> list = new ArrayList<>();
+        middleOrderRecursion(root, list);
+
+        int first = 0;
+        int last = list.size() - 1;
+        while (first < last && last < list.size()) {
+            int head = list.get(first);
+            int tail = list.get(last);
+            if (head + tail == k) {
+                return true;
+            }
+            if (head + tail < k) {
+                first++;
+            } else {
+                last--;
+            }
+        }
+        return false;
     }
 
+    private void middleOrderRecursion(TreeNode node, List<Integer> list) {
+        if (node == null) {
+            return;
+        }
+
+        middleOrderRecursion(node.left, list);
+        list.add(node.val);
+        middleOrderRecursion(node.right, list);
+    }
 }
