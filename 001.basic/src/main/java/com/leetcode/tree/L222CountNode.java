@@ -88,14 +88,14 @@ public class L222CountNode {
         recursion(node.right, level);
     }
 
-    public static void main(String[] args) {
-        TreeNode n11 = new TreeNode(1);
-
-        TreeNode n21 = new TreeNode(2);
-        TreeNode n22 = new TreeNode(3);
-        n11.left = n21;
-        n11.right = n22;
-
-        TreeNode n31 =
-    }
+//    public static void main(String[] args) {
+//        TreeNode n11 = new TreeNode(1);
+//
+//        TreeNode n21 = new TreeNode(2);
+//        TreeNode n22 = new TreeNode(3);
+//        n11.left = n21;
+//        n11.right = n22;
+//
+//        // TreeNode n31 =
+//    }
 }
