@@ -1,10 +1,9 @@
 package com.leetcode.tree.middle;
 
 import com.leetcode.tree.TreeNode;
+import com.leetcode.tree.utils.TreeUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 863. 二叉树中所有距离为 K 的结点
@@ -39,35 +38,160 @@ import java.util.List;
  */
 public class L863KthDistNode {
 
-    /*
+    /**
+     * 1. 深度优先搜索建立node->parent的映射关系
+     * 2. 广度优先搜索left, right, parent三个方向，将第K层所有节点加入结果集
+     */
+    Map<TreeNode, TreeNode> parentMap = new HashMap<>();
+
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int K) {
+        List<Integer> ans = new ArrayList<>();
+
+        if (root == null || target == null || K < 0) {
+            return ans;
+        }
+
+        buildParentMapDfs(root, null);
+        Queue<TreeNode> queue = new LinkedList<>();
+        Set<TreeNode> visited = new HashSet<>();
+        queue.add(target);
+        visited.add(target);
+
+        int k = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            if (k == K) {
+                for (int i = 0; i < size; i++) {
+                    ans.add(queue.poll().val);
+                }
+                return ans;
+            }
+
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (node.left != null && !visited.contains(node.left)) {
+                    queue.add(node.left);
+                    visited.add(node.left);
+                }
+                if (node.right != null && !visited.contains(node.right)) {
+                    queue.add(node.right);
+                    visited.add(node.right);
+                }
+                TreeNode parent = parentMap.getOrDefault(node, null);
+                if (parent != null && !visited.contains(parent)) {
+                    queue.add(parent);
+                    visited.add(parent);
+                }
+            }
+            k++;
+        }
+
+        return ans;
+    }
+
+    private void buildParentMapDfs(TreeNode node, TreeNode parent) {
+        if (node == null) {
+            return;
+        }
+        parentMap.put(node, parent);
+        buildParentMapDfs(node.left, node);
+        buildParentMapDfs(node.right, node);
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = TreeUtils.makeBinaryTree(Arrays.asList(
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+                null, null, null, null, null, null, null, 13, null, null, 14));
+
+        System.out.println(root.val);
+
+        L863KthDistNode test = new L863KthDistNode();
+//        test.buildParentMapDfs(root, null);
+//        System.out.println(test.parentMap.toString());
+         List<Integer> ans = test.distanceK(root, root.left, 2);
+         System.out.println(ans);
+    }
+
+    // --------------------------------------------------------------------------
+     /*
     简化： 先找到节点，然后向下递归K层
     找到子节点，并将路径放到一个队列中，并将方向信息保存在另外一个队列
     子问题： 向下某个方向找n层
 
      */
-    public List<Integer> distanceK(TreeNode root, TreeNode target, int K) {
-        // todo:
-        return null;
-    }
+    LinkedList<TreeNode> ancestors = new LinkedList<>();
+    LinkedList<Integer> directions = new LinkedList<>();
+    public List<Integer> distanceK1(TreeNode root, TreeNode target, int K) {
+        List<Integer> ans = new ArrayList<>();
 
-    public static void main(String[] args) {
-
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(null);
-        System.out.println(list.toString());
-
-
-    }
-
-    static TreeNode makeTree(List<Integer> values) {
-
-        LinkedList<Integer> linkedList = new LinkedList<>(values);
-        int size =
-        while (!linkedList.isEmpty()) {
-
+        findTarget(root, target);
+        int k = K;
+        while (!ancestors.isEmpty() && !directions.isEmpty() && k >= 0) {
+            TreeNode node = ancestors.removeLast();
+            Integer direction = directions.removeLast();
+            if (direction.equals(0)) {
+                searchRecursion(node, true, true, k, ans);
+            } else if (direction.equals(-1)) {
+                searchRecursion(node, false, true, k, ans);
+            } else {
+                searchRecursion(node, true, false, k, ans);
+            }
+            k--;
         }
-        values.add(null);
-        return null;
+
+        return ans;
     }
+
+    boolean findTarget(TreeNode parent, TreeNode target) {
+        if (parent == null || target == null) {
+            return false;
+        }
+
+        if (parent == target) {
+            ancestors.addLast(target);
+            directions.addLast(0);
+            return true;
+        }
+
+        if (parent.left != null) {
+            ancestors.addLast(parent);
+            directions.addLast(-1);
+            if (findTarget(parent.left, target)) {
+                return true;
+            }
+            ancestors.removeLast();
+            directions.removeLast();
+        }
+        if (parent.right != null) {
+            ancestors.addLast(parent);
+            directions.addLast(1);
+            if (findTarget(parent.right, target)) {
+                return true;
+            }
+            ancestors.removeLast();
+            directions.removeLast();
+        }
+
+        return false;
+    }
+
+    void searchRecursion(TreeNode node, boolean left, boolean right,
+                                int level, List<Integer> answer) {
+        if (node == null || level < 0) {
+            return;
+        }
+        if (level == 0) {
+            answer.add(node.val);
+            return;
+        }
+        if (left) {
+            searchRecursion(node.left, true, true, level - 1, answer);
+        }
+        if (right) {
+            searchRecursion(node.right, true, true,level - 1, answer);
+        }
+    }
+
+
+
 }
