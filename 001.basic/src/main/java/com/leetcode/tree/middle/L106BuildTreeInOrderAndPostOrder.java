@@ -4,6 +4,7 @@ import com.leetcode.tree.TreeNode;
 import com.leetcode.tree.utils.TreeUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * 106. 从中序与后序遍历序列构造二叉树
@@ -25,8 +26,13 @@ import java.util.Arrays;
  *    15   7
  */
 public class L106BuildTreeInOrderAndPostOrder {
+    HashMap<Integer,Integer> memo = new HashMap<>();
 
     public TreeNode buildTree(int[] inorder, int[] postorder) {
+        for(int i = 0;i < inorder.length; i++) {
+            memo.put(inorder[i], i);
+        }
+
         return recursion(inorder, 0, inorder.length,
                 postorder, 0, postorder.length);
     }
@@ -51,25 +57,14 @@ public class L106BuildTreeInOrderAndPostOrder {
         }
 
         TreeNode node = new TreeNode(postorder[postEnd - 1]);
-        int inorderMidIndex = findIndex(inorder, node.val);
-        System.out.println("left recursion, in: " + inBegin + "," + inorderMidIndex);
-        System.out.println("left recursion, post: " + postBegin + "," + (postBegin + (inorderMidIndex - inBegin)));
+        int inorderMidIndex = memo.get(node.val);
 
         node.left = recursion(inorder, inBegin, inorderMidIndex,
                 postorder, postBegin, postBegin + (inorderMidIndex - inBegin));
         node.right = recursion(inorder, inorderMidIndex + 1, inEnd,
-                postorder, postBegin + (inorderMidIndex - inBegin) + 1, postEnd - 1);
+                postorder, postBegin + (inorderMidIndex - inBegin), postEnd - 1);
 
         return node;
-    }
-
-    int findIndex(int[] array, int val) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == val) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     public static void main(String[] args) {
