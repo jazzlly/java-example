@@ -1,6 +1,9 @@
 package com.leetcode.tree.middle;
 
 import com.leetcode.tree.TreeNode;
+import com.leetcode.tree.utils.TreeUtils;
+
+import java.util.*;
 
 /**
  * 508. 出现次数最多的子树元素和
@@ -31,7 +34,45 @@ import com.leetcode.tree.TreeNode;
  * 提示： 假设任意子树元素和均可以用 32 位有符号整数表示。
  */
 public class L508SubtreeSumFreq {
-    public int[] findFrequentTreeSum(TreeNode root) {
+    Map<Integer, Integer> sumMap = new HashMap<>();
+    TreeMap<Integer, List<Integer>> treeMap = new TreeMap<>();
 
+    public int[] findFrequentTreeSum(TreeNode root) {
+        if (root == null) {
+            return new int[] {};
+        }
+
+        treeSum(root);
+
+        for (Map.Entry<Integer, Integer> entry : sumMap.entrySet()) {
+            List<Integer> list = treeMap.getOrDefault(entry.getValue(), new ArrayList<>());
+            list.add(entry.getKey());
+            treeMap.put(entry.getValue(), list);
+        }
+
+        List<Integer> last = treeMap.lastEntry().getValue();
+        int[] ans = new int[last.size()];
+        for (int i = 0; i < ans.length; i++) {
+            ans[i] = last.get(i);
+        }
+        return ans;
+    }
+
+    int treeSum(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        int sum = node.val + treeSum(node.left) + treeSum(node.right);
+        sumMap.put(sum, sumMap.getOrDefault(sum, 0) + 1);
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = TreeUtils.makeBinaryTree(Arrays.asList(
+                5, 2, -5));
+        L508SubtreeSumFreq test = new L508SubtreeSumFreq();
+
+        System.out.println(test.findFrequentTreeSum(root));
     }
 }
