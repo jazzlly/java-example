@@ -34,8 +34,8 @@ import java.util.*;
  * 提示： 假设任意子树元素和均可以用 32 位有符号整数表示。
  */
 public class L508SubtreeSumFreq {
+    int maxSum = Integer.MIN_VALUE;
     Map<Integer, Integer> sumMap = new HashMap<>();
-    TreeMap<Integer, List<Integer>> treeMap = new TreeMap<>();
 
     public int[] findFrequentTreeSum(TreeNode root) {
         if (root == null) {
@@ -44,16 +44,16 @@ public class L508SubtreeSumFreq {
 
         treeSum(root);
 
+        List<Integer> tmp = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : sumMap.entrySet()) {
-            List<Integer> list = treeMap.getOrDefault(entry.getValue(), new ArrayList<>());
-            list.add(entry.getKey());
-            treeMap.put(entry.getValue(), list);
+            if (entry.getValue().equals(maxSum)) {
+                tmp.add(entry.getKey());
+            }
         }
 
-        List<Integer> last = treeMap.lastEntry().getValue();
-        int[] ans = new int[last.size()];
+        int[] ans = new int[tmp.size()];
         for (int i = 0; i < ans.length; i++) {
-            ans[i] = last.get(i);
+            ans[i] = tmp.get(i);
         }
         return ans;
     }
@@ -63,14 +63,17 @@ public class L508SubtreeSumFreq {
             return 0;
         }
 
-        int sum = node.val + treeSum(node.left) + treeSum(node.right);
-        sumMap.put(sum, sumMap.getOrDefault(sum, 0) + 1);
+        int sum = treeSum(node.left) + treeSum(node.right) + node.val;
+        int cnt = sumMap.getOrDefault(sum, 0) + 1;
+        maxSum = Math.max(maxSum, cnt);
+        sumMap.put(sum, cnt);
+
         return sum;
     }
 
     public static void main(String[] args) {
         TreeNode root = TreeUtils.makeBinaryTree(Arrays.asList(
-                5, 2, -5));
+                5, 2, -3));
         L508SubtreeSumFreq test = new L508SubtreeSumFreq();
 
         System.out.println(test.findFrequentTreeSum(root));
