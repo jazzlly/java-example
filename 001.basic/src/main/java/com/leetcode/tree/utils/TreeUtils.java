@@ -3,9 +3,14 @@ package com.leetcode.tree.utils;
 import com.leetcode.tree.TreeNode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TreeUtils {
+    public static TreeNode makeBinaryTree(Integer ... a) {
+        return makeBinaryTree(Arrays.asList(a));
+    }
+
     public static TreeNode makeBinaryTree(List<Integer> list) {
         if (list == null || list.size() == 0) {
             return null;
