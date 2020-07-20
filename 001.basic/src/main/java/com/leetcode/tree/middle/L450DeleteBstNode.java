@@ -1,6 +1,9 @@
 package com.leetcode.tree.middle;
 
 import com.leetcode.tree.TreeNode;
+import com.leetcode.tree.utils.TreeUtils;
+
+import java.util.Arrays;
 
 /**
  * 450. 删除二叉搜索树中的节点
@@ -44,6 +47,43 @@ import com.leetcode.tree.TreeNode;
 public class L450DeleteBstNode {
 
     public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
 
+        if (root.val == key) {
+            return mergeTwoTree(root.left, root.right);
+        } else if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            root.left = deleteNode(root.left, key);
+        }
+
+        return root;
     }
+
+    static TreeNode mergeTwoTree(TreeNode left, TreeNode right) {
+        if (left == null) {
+            return right;
+        }
+        if (right == null) {
+            return left;
+        }
+
+        TreeNode l = right.left;
+        TreeNode r = right.right;
+        right.left = left;
+        right.right = mergeTwoTree(l, r);
+
+        return right;
+    }
+
+    public static void main(String[] args) {
+        L450DeleteBstNode test = new L450DeleteBstNode();
+        TreeNode root = TreeUtils.makeBinaryTree(Arrays.asList(
+                5,3,6,2,4,null,7));
+        TreeNode node = test.deleteNode(root, 5);
+        System.out.println("haha");
+    }
+
 }
