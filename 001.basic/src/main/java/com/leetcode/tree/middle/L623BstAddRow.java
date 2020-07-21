@@ -3,7 +3,6 @@ package com.leetcode.tree.middle;
 import com.leetcode.tree.TreeNode;
 import com.leetcode.tree.utils.TreeUtils;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -68,7 +67,9 @@ import java.util.Queue;
  * 输入的二叉树至少有一个节点。
  */
 public class L623BstAddRow {
-    public TreeNode addOneRow(TreeNode root, int v, int d) {
+
+    // bfs
+    public TreeNode addOneRow1(TreeNode root, int v, int d) {
         if (d == 1) {
             TreeNode node = new TreeNode(v);
             node.left = root;
@@ -80,6 +81,10 @@ public class L623BstAddRow {
 
         int level = 1;
         while (!queue.isEmpty()) {
+            if (level > d - 1) {
+                break;
+            }
+
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 TreeNode node = queue.poll();
@@ -103,6 +108,37 @@ public class L623BstAddRow {
             level++;
         }
         return root;
+    }
+
+    // dfs
+    public TreeNode addOneRow(TreeNode root, int v, int d) {
+        if (d == 1) {
+            TreeNode node = new TreeNode(v);
+            node.left = root;
+            return node;
+        }
+
+        dfsRecursion(root, 1, v, d);
+        return root;
+    }
+
+    private void dfsRecursion(TreeNode node, int level, int v, int d) {
+        if (node == null || level > d - 1) {
+            return;
+        }
+
+        if (level == (d - 1)) {
+            TreeNode left = new TreeNode(v);
+            TreeNode right = new TreeNode(v);
+            left.left = node.left;
+            right.right = node.right;
+            node.left = left;
+            node.right = right;
+            return;
+        }
+
+        dfsRecursion(node.left, level+1, v, d);
+        dfsRecursion(node.right, level+1, v, d);
     }
 
     public static void main(String[] args) {
