@@ -17,7 +17,7 @@ import com.leetcode.tree.utils.TreeUtils;
  * 初始状态下，所有 next 指针都被设置为 NULL。
  */
 public class L116AddNextNode {
-    public Node connect(Node root) {
+    public Node connect1(Node root) {
         recursion(root);
         return root;
     }
@@ -37,6 +37,31 @@ public class L116AddNextNode {
 
         recursion(node.left);
         recursion(node.right);
+    }
+
+    /**
+     * 使用next指针
+     * @param root
+     * @return
+     */
+    public Node connect(Node root) {
+        Node leftMost = root;
+        while (leftMost != null) {
+            Node cursor = leftMost;
+
+            while (cursor != null) {
+                if (cursor.left != null) {
+                    cursor.left.next = cursor.right;
+                }
+
+                if (cursor.right != null && cursor.next != null) {
+                    cursor.right.next = cursor.next.left;
+                }
+                cursor = cursor.next;
+            }
+            leftMost = leftMost.left;
+        }
+        return root;
     }
 
     public static void main(String[] args) {
