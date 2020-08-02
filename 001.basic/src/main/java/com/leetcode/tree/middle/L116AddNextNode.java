@@ -1,5 +1,7 @@
 package com.leetcode.tree.middle;
 
+import com.leetcode.tree.utils.TreeUtils;
+
 /**
  * 116. 填充每个节点的下一个右侧节点指针
  * 给定一个完美二叉树，其所有叶子节点都在同一层，每个父节点都有两个子节点。二叉树定义如下：
@@ -15,8 +17,8 @@ package com.leetcode.tree.middle;
  * 初始状态下，所有 next 指针都被设置为 NULL。
  */
 public class L116AddNextNode {
-    /*
-    public Node connect(Node root) {
+
+    public Node connect1(Node root) {
         recursion(root);
         return root;
     }
@@ -38,18 +40,40 @@ public class L116AddNextNode {
         recursion(node.right);
     }
 
-    public static void main(String[] args) {
+    /**
+     * 使用next指针
+     * @param root
+     * @return
+     */
+    public Node connect(Node root) {
+        Node leftMost = root;
+        while (leftMost != null) {
+            Node cursor = leftMost;
 
-        Node root = TreeUtils.makeNodeBinaryTree(
-                1, 2, 3, 4, 5, 6, 7);
+            while (cursor != null) {
+                if (cursor.left != null) {
+                    cursor.left.next = cursor.right;
+                }
 
-        L116AddNextNode test = new L116AddNextNode();
-        Node ans = test.connect(root);
-        System.out.println("haha!");
+                if (cursor.right != null && cursor.next != null) {
+                    cursor.right.next = cursor.next.left;
+                }
+                cursor = cursor.next;
+            }
+            leftMost = leftMost.left;
+        }
+        return root;
     }
 
-     */
+    public static void main(String[] args) {
 
+//        Node root = TreeUtils.makeNodeBinaryTree(
+//                1, 2, 3, 4, 5, 6, 7);
+//
+//        L116AddNextNode test = new L116AddNextNode();
+//        Node ans = test.connect(root);
+//        System.out.println("haha!");
+    }
 }
 
 
