@@ -1,7 +1,7 @@
 package com.leetcode.tree.utils;
 
 import com.leetcode.tree.TreeNode;
-import com.leetcode.tree.middle.Node;
+// import com.leetcode.tree.middle.Node;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +44,7 @@ public class TreeUtils {
         return treeNodes.get(0);
     }
 
+    /*
     public static Node makeNodeBinaryTree(Integer ... a) {
         return makeNodeBinaryTree(Arrays.asList(a));
     }
@@ -79,4 +80,6 @@ public class TreeUtils {
         }
         return treeNodes.get(0);
     }
+    
+     */
 }
