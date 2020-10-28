@@ -1,5 +1,7 @@
 package com.leetcode.dp;
 
+import java.util.Arrays;
+
 public class L300LongAscSequence {
 
     public int lengthOfLIS1(int[] nums) {
@@ -9,9 +11,7 @@ public class L300LongAscSequence {
 
         int max = 1;
         int[] dp = new int[nums.length];
-        for (int i = 0; i < dp.length; i++) {
-            dp[i] = 1;
-        }
+        Arrays.fill(dp, 1);
 
         for (int i = 0; i < nums.length; i++) {
             for (int j = 0; j < i ; j++) {
