@@ -1,5 +1,7 @@
 package com.leetcode.list;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class L430Flattern {
@@ -88,5 +90,6 @@ public class L430Flattern {
         stack.push(null);
         Node node = stack.peek();
         System.out.println(node);
+
     }
 }
