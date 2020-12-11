@@ -46,7 +46,7 @@ import java.util.*;
  * 每个 deadends 和 target 中的字符串的数字会在 10,000 个可能的情况 '0000' 到 '9999' 中产生。
  */
 public class L752Lock {
-    public int openLock(String[] deadends, String target) {
+    public int openLock1(String[] deadends, String target) {
         // bfs + 路径记录
         Set<String> visited = new HashSet<>(Arrays.asList(deadends));
 
@@ -102,49 +102,69 @@ public class L752Lock {
         return sb.toString();
     }
 
-    private static String nextMove(String current, int pos, int dir) {
-        int y = ((current.charAt(pos) - '0') + dir + 10) % 10;
-        return current.substring(0, pos) + ("" + y) + current.substring(pos+1);
-
-        /*Integer target = Integer.parseInt(current.substring(pos, pos + 1));
-        switch (dir) {
-            case 0: // 加1
-                target += 1;
-                break;
-            case 1: // 减1
-                target -= 1;
-                break;
-            default:
-                throw new IllegalArgumentException("direction wrong!");
-        }
-        if (target >= 10) {
-            target = 0;
-        }
-        if (target < 0) {
-            target = 9;
+    public int openLock(String[] deadends, String target) {        
+        if ("0000".equals(target)) {
+            return 0;
         }
 
-        StringBuilder builder = new StringBuilder();
-        if (pos > 0) {
-            builder.append(current.substring(0, pos));
+        Set<String> visited = new HashSet<>();
+        for (String s : deadends) {
+            visited.add(s);
         }
-        builder.append(target);
-        if (pos < current.length() - 1) {
-            builder.append(current.substring(pos + 1));
+
+        if (visited.contains("0000")) {
+            return -1;
         }
-        return builder.toString();*/
+
+        int minStep = 0;
+
+        Queue<String> queue = new LinkedList<>();
+        queue.add("0000");
+        visited.add("0000");
+
+        while(!queue.isEmpty()) {
+            minStep++;
+
+            int size = queue.size();
+            
+            for (int i = 0; i < size; i++) {
+                String lock = queue.poll();
+               
+                for (int j = 0; j < 4; j++) {
+                    for (int j2 = -1; j2 < 2; j2+=2) {
+                        String flip = flipLock(lock, j, j2);
+                        if (target.equals(flip)) {
+                            return minStep;
+                        }
+                        if (!visited.contains(flip)) {
+                            queue.add(flip);
+                            visited.add(flip);
+                        }
+                    }
+                }
+            }
+        }
+
+        return -1;
     }
 
 
-
     public static void main(String[] args) {
-        System.out.println("1".substring(0));
-        System.out.println("1".substring(0,0));
 
-        System.out.println(flipLock("0000", 0, -1));
-        System.out.println(flipLock("0000", 0, 1));
-        System.out.println(flipLock("0000", 3, -1));
-        System.out.println(flipLock("0000", 3, 1));
+        L752Lock test = new L752Lock();
+        System.out.println(test.openLock(new String[] {"0000"}, "1111"));
+
+        // System.out.println(test.openLock(new String[] {"8887","8889","8878","8898","8788","8988","7888","9888"}, "8888"));
+        // System.out.println(test.openLock(new String[] {"0201","0101","0102","1212","2002"}, "0202"));
+        // System.out.println(test.openLock(new String[] {"8888"}, "0009"));
+
+        // System.out.println("1".substring(0));
+        // System.out.println("1".substring(0,0));
+
+        // System.out.println(flipLock("0000", 0, -1));
+        // System.out.println(flipLock("0000", 0, 1));
+        // System.out.println(flipLock("0000", 3, -1));
+        // System.out.println(flipLock("0000", 3, 1));
     }
 
 }

@@ -1,5 +1,8 @@
 package com.leetcode.tree;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * 111. 二叉树的最小深度
  * 给定一个二叉树，找出其最小深度。
@@ -22,7 +25,7 @@ package com.leetcode.tree;
 public class L111BinaryTreeMinDepth {
 
     int minDepth = Integer.MAX_VALUE;
-    public int minDepth(TreeNode root) {
+    public int minDepth1(TreeNode root) {
         if (root == null) {
             return 0;
         }
@@ -45,4 +48,36 @@ public class L111BinaryTreeMinDepth {
         dfs(node.left, level + 1);
         dfs(node.right, level + 1);
     }
+
+
+    public int minDepth(TreeNode root) {
+        int minDepth = 0;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        if (root != null) {
+            queue.add(root);
+        }
+
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            minDepth++;
+
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (node.left == null && node.right == null) {
+                    return minDepth;
+                }
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+            }
+        }
+
+        return minDepth;
+    }
+
+
 }

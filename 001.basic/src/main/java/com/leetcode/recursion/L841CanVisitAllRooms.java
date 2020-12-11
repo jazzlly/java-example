@@ -9,36 +9,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class L841CanVisitAllRooms {
     
-    int[] visitedRoom = null;   // 遍历过的room集合，防止形成环形图
-    Set<Integer> enteredRooms = null; // 进入过的房间的历史
+    int count = 0;
+    boolean[] visited = null;
 
     public boolean canVisitAllRooms(List<List<Integer>> rooms) {
-        enteredRooms = new HashSet<>();
-        visitedRoom = new int[rooms.size()];
+        count = 0;
+        visited = new boolean[rooms.size()];
 
-        return recursion(rooms, 0);
+        recursion(rooms, 0);
+        return count == rooms.size();
     }
     
-    boolean recursion(List<List<Integer>> rooms, int num) {
-        enteredRooms.add(num);
-        if (enteredRooms.size() == rooms.size()) {
-            return true;
-        }
+    void recursion(List<List<Integer>> rooms, int num) {
+        visited[num] = true;
+        count++;
 
-        if (visitedRoom[num] == 1) {
-            return false;
-        }
-
-        visitedRoom[num] = 1;
-        List<Integer> keys = rooms.get(num);
-        for (Integer key : keys) {
-            if (recursion(rooms, key)) {
-                return true;
+        for (int n : rooms.get(num)) {
+            if (!visited[n]) {
+                recursion(rooms, n);
             }
         }
-
-        visitedRoom[num] = 0;
-        return false;
     }
 
     public static void main(String[] args) {
