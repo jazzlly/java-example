@@ -89,7 +89,6 @@ public class L752Lock {
                     }
                 }
             }
-
             step++;
         }
 
@@ -102,16 +101,8 @@ public class L752Lock {
         return sb.toString();
     }
 
-    public int openLock(String[] deadends, String target) {        
-        if ("0000".equals(target)) {
-            return 0;
-        }
-
-        Set<String> visited = new HashSet<>();
-        for (String s : deadends) {
-            visited.add(s);
-        }
-
+    public int openLock2(String[] deadends, String target) {        
+        Set<String> visited = new HashSet<>(Arrays.asList(deadends));
         if (visited.contains("0000")) {
             return -1;
         }
@@ -123,19 +114,18 @@ public class L752Lock {
         visited.add("0000");
 
         while(!queue.isEmpty()) {
-            minStep++;
-
             int size = queue.size();
             
             for (int i = 0; i < size; i++) {
                 String lock = queue.poll();
-               
+
+                if (target.equals(lock)) {
+                    return minStep;
+                }
+
                 for (int j = 0; j < 4; j++) {
                     for (int j2 = -1; j2 < 2; j2+=2) {
                         String flip = flipLock(lock, j, j2);
-                        if (target.equals(flip)) {
-                            return minStep;
-                        }
                         if (!visited.contains(flip)) {
                             queue.add(flip);
                             visited.add(flip);
@@ -143,6 +133,52 @@ public class L752Lock {
                     }
                 }
             }
+            minStep++;
+        }
+
+        return -1;
+    }
+
+    public int openLock(String[] deadends, String target) {        
+        Set<String> visited = new HashSet<>(Arrays.asList(deadends));
+        if (visited.contains("0000")) {
+            return -1;
+        }
+
+        int minStep = 0;
+
+        Set<String> queue1 = new HashSet<>();
+        Set<String> queue2 = new HashSet<>();
+        queue1.add("0000");
+        queue2.add(target);
+
+        while(!queue1.isEmpty() && !queue2.isEmpty()) {
+            Set<String> queue3 = new HashSet<>();
+            for (String lock : queue1) {
+                visited.add(lock);
+
+                if (queue2.contains(lock)) {
+                    return minStep;
+                }
+
+                for (int j = 0; j < 4; j++) {
+                    for (int j2 = -1; j2 < 2; j2+=2) {
+                        String flip = flipLock(lock, j, j2);
+                        if (!visited.contains(flip)) {
+                            queue3.add(flip);
+                        }
+                    }
+                }
+            }
+
+            if (queue3.size() > queue2.size()) {
+                queue1 = queue2;
+                queue2 = queue3;
+            } else {
+                queue1 = queue3;
+            }
+            
+            minStep++;
         }
 
         return -1;
@@ -154,9 +190,12 @@ public class L752Lock {
         L752Lock test = new L752Lock();
         System.out.println(test.openLock(new String[] {"0000"}, "1111"));
 
-        // System.out.println(test.openLock(new String[] {"8887","8889","8878","8898","8788","8988","7888","9888"}, "8888"));
-        // System.out.println(test.openLock(new String[] {"0201","0101","0102","1212","2002"}, "0202"));
-        // System.out.println(test.openLock(new String[] {"8888"}, "0009"));
+        System.out.println(test.openLock(
+            new String[] {"8887","8889","8878","8898","8788","8988","7888","9888"}, "8888"));
+        System.out.println(test.openLock(
+            new String[] {"0201","0101","0102","1212","2002"}, "0202"));
+        System.out.println(test.openLock(
+            new String[] {"8888"}, "0009"));
 
         // System.out.println("1".substring(0));
         // System.out.println("1".substring(0,0));
