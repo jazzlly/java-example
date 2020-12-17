@@ -33,7 +33,7 @@ public class SlidingWindow {
         }
     }
 
-    static public String minWindow(String source, String target) {
+    static public String minWindow1(String source, String target) {
         Map<Character, Integer> need = new HashMap<>();
         Map<Character, Integer> window = new HashMap<>();
 
@@ -75,10 +75,57 @@ public class SlidingWindow {
             }
         }
         return len == Integer.MAX_VALUE ? "" : source.substring(start, start + len);
-
     }
 
-    static public boolean checkInclusion(String target, String source) {
+    public String minWindow(String source, String target) {
+        int[] need = new int[128];
+        int[] window = new int[128];
+        int uniqCnt = 0;
+        
+        for (int i = 0; i < target.length(); i++) {
+            if (need[target.charAt(i)] == 0) {
+                uniqCnt++;
+            }
+            need[target.charAt(i)]++;
+        }
+
+        int left = 0;
+        int right = 0;
+        int valid = 0;
+        int start = 0;
+        int len = Integer.MAX_VALUE;
+        while (right < source.length()) {
+            char c = source.charAt(right);
+            right++;
+
+            if (need[c] > 0) {
+                window[c]++;
+                if (window[c] == need[c]) {
+                    valid++;
+                }
+            }
+
+            while(valid >= uniqCnt) {
+                if (right - left < len) {
+                    start = left;
+                    len = right - left;
+                }
+
+                char c2 = source.charAt(left);
+                left++;
+
+                if (need[c2] > 0) {
+                    if (window[c2] == (need[c2])) {
+                        valid--;
+                    }
+                    window[c2]--;
+                }
+            }
+        }
+        return len == Integer.MAX_VALUE ? "" : source.substring(start, start + len);
+    }
+
+    static public boolean checkInclusion1(String target, String source) {
         Map<Character, Integer> need = new HashMap<>();
         Map<Character, Integer> window = new HashMap<>();
 
@@ -113,6 +160,52 @@ public class SlidingWindow {
                         valid--;
                     }
                     window.put(c2, window.get(c2) - 1);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    static public boolean checkInclusion(String target, String source) {
+        int[] need = new int[128];
+        int[] window = new int[128];
+        int uniqCnt = 0;
+        
+        for (int i = 0; i < target.length(); i++) {
+            if (need[target.charAt(i)] == 0) {
+                uniqCnt++;
+            }
+            need[target.charAt(i)]++;
+        }
+
+        int left = 0;
+        int right = 0;
+        int valid = 0;
+        while (right < source.length()) {
+            char c = source.charAt(right);
+            right++;
+
+            if (need[c] > 0) {
+                window[c]++;
+                if (window[c] == need[c]) {
+                    valid++;
+                }
+            }
+
+            while(right - left >= target.length()) {
+                if (valid == uniqCnt) {
+                    return true;
+                }
+
+                char c2 = source.charAt(left);
+                left++;
+
+                if (need[c2] > 0) {
+                    if (window[c2] == need[c2]) {
+                        valid--;
+                    }
+                    window[c2]--;
                 }
             }
         }
@@ -196,7 +289,17 @@ public class SlidingWindow {
         // assertThat(minWindow("ADOBECODEBANC", "ABCD")).isEqualTo("ADOBEC");
 
         
-        assertThat(checkInclusion("abcdxabcde", "abcdeabcdx")).isTrue();
+        // assertThat(checkInclusion("abcdxabcde", "abcdeabcdx")).isTrue();
+
+        System.out.println((int)'a');
+        System.out.println((int)'z');
+        System.out.println((int)'A');
+        System.out.println((int)'Z');
+        StringBuilder builder = new StringBuilder();
+        for (int i = 65; i < 123; i++) {
+            builder.append((char)i);
+        }
+        System.out.println(builder.toString());
     }
     
 }
