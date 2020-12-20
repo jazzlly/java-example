@@ -13,7 +13,6 @@ public class CoinChange {
             return -1;
         }
 
-
         int min = Integer.MAX_VALUE;
         for (int coin : coins) {
             if (coin > amount) {
