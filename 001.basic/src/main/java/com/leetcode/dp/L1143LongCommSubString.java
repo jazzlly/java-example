@@ -1,5 +1,7 @@
 package com.leetcode.dp;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class L1143LongCommSubString {
 
     /**
@@ -40,7 +42,7 @@ public class L1143LongCommSubString {
      * @param text2
      * @return
      */
-    public int longestCommonSubsequence(String text1, String text2) {
+    public int longestCommonSubsequence1(String text1, String text2) {
         assert text1 != null && text2 != null &&
                 text1.length() >= 1 && text2.length() >=1;
 
@@ -70,4 +72,37 @@ public class L1143LongCommSubString {
         }*/
         return grid[text2.length()][text1.length()];
     }
+
+    public int longestCommonSubsequence(String text1, String text2) {
+        int[][] grid = new int[text1.length() + 1][text2.length() + 1];
+
+        for (int i = 1; i < grid.length; i++) {
+            for (int j = 1; j < grid[0].length; j++) {
+
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    grid[i][j] = grid[i-1][j-1] + 1;
+                } else {
+                    grid[i][j] = Math.max(grid[i-1][j], grid[i][j-1]);
+                }
+            }
+        }
+
+        return grid[text1.length()][text2.length()];
+    }
+
+    public static void main(String[] args) {
+        L1143LongCommSubString test = new L1143LongCommSubString();
+        
+        assertThat(test.longestCommonSubsequence("", "")).isEqualTo(0);
+        assertThat(test.longestCommonSubsequence("a", "")).isEqualTo(0);
+        assertThat(test.longestCommonSubsequence("", "a")).isEqualTo(0);
+        assertThat(test.longestCommonSubsequence("a", "b")).isEqualTo(0);
+        assertThat(test.longestCommonSubsequence("a", "a")).isEqualTo(1);
+        assertThat(test.longestCommonSubsequence("abcde", "ace")).isEqualTo(3);
+        assertThat(test.longestCommonSubsequence("abc", "abc")).isEqualTo(3);
+        assertThat(test.longestCommonSubsequence("abc", "def")).isEqualTo(0);
+        
+        assertThat(test.longestCommonSubsequence("bsbininm", "jmjkbkjkv")).isEqualTo(1);
+    }
+
 }
