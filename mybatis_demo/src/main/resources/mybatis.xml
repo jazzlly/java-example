@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <properties resource="db.properties">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+    </properties>
+
+    <settings>
+        <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
+        <!-- 开启二级缓存 -->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <!-- 类型别名，为包下面的所有java类设置别名: 类的名字，忽略大小写 -->
+        <package name="com.mb.demo.model"/>
+    </typeAliases>
+
+    <plugins>
+        <!-- 分页插件 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+        </plugin>
+    </plugins>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="jdbc:mysql://192.168.11.78:3306/mybatis"/>
+                <property name="username" value="${username}"/> <!-- db.properties中 -->
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+<!--        <mapper resource="EmpMapper.xml"/>-->
+<!--        <mapper class="com.mb.demo.mapper.EmpMapper"></mapper>-->
+<!--        <mapper class="com.mb.demo.mapper.EmpMapper2"></mapper>-->
+        <!-- 设置package所有mapper-->
+        <package name="com.mb.demo.mapper"/>
+    </mappers>
+</configuration>

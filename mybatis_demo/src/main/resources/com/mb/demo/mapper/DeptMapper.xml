@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mb.demo.mapper.DeptMapper">
+
+    <!-- 公用Emp的缓存   -->
+    <cache-ref namespace="com.mb.demo.mapper.EmpMapper"/>
+
+    <!-- 阿里的规范是要求强制使用result map的。
+        就算entity类成员名和数据库类型名是一一对也强制要求  -->
+    <resultMap id="dept_map" type="dept">
+        <id column="id" property="id"></id>
+        <result column="dept_name" property="deptName"></result>
+    </resultMap>
+
+    <resultMap id="dept_map2" type="dept">
+        <id column="id" property="id"></id>
+        <result column="dept_name" property="deptName"></result>
+        <association property="emps" column="id"
+                     select="com.mb.demo.mapper.EmpMapper.selectEmpInDept1"></association>
+    </resultMap>
+
+    <select id="selectDept" resultMap="dept_map">
+        select * from dept where id = #{id}
+    </select>
+
+    <select id="selectDeptAndEmps" resultMap="dept_map2">
+        select * from dept where id = #{id}
+    </select>
+
+    <insert id="insertDept">
+        INSERT INTO mybatis.dept
+        (dept_name)
+        VALUES(#{deptName})
+    </insert>
+
+</mapper>

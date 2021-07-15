@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mb.demo.mapper.EmpMapper">
+
+    <cache></cache>
+    <!-- 处理多表联合查询结果时， 推荐使用map和dto方式   -->
+
+    <!-- 阿里的规范是要求强制使用result map的。
+        就算entity类成员名和数据库类型名是一一对也强制要求  -->
+    <resultMap id="emp_map" type="emp">
+        <id column="id" property="id"></id>
+        <result column="username" property="username"></result>
+        <result column="dept_id" property="deptId"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="dept_name" property="deptName"></result>
+    </resultMap>
+
+    <!--
+    将联合查询的结果映射到嵌套Entity中。sql里面的as后的值和column字段对应就行
+    -->
+    <resultMap id="emp_map1" type="emp">
+        <id column="id" property="id"></id>
+        <result column="username" property="username"></result>
+        <result column="dept_id" property="deptId"></result>
+        <result column="create_time" property="createTime"></result>
+        <association property="dept">
+            <id column="dept_id" property="id"></id>
+            <result column="dept_name" property="deptName"></result>
+        </association>
+    </resultMap>
+
+    <!--  分步骤查询: 两次查询, 可以使用懒加载-->
+    <resultMap id="emp_map2" type="emp">
+        <id column="id" property="id"></id>
+        <result column="username" property="username"></result>
+        <result column="dept_id" property="deptId"></result>
+        <result column="create_time" property="createTime"></result>
+        <association property="dept" column="dept_id"
+                     select="com.mb.demo.mapper.DeptMapper.selectDept">
+        </association>
+    </resultMap>
+
+    <!-- 函数参数只有一个， #{}中值可以随便写-->
+    <select id="selectEmp" resultMap="emp_map">
+        select * from emp where id = #{id}
+    </select>
+
+    <!-- 分步骤查询 -->
+    <select id="selectEmpAss" resultMap="emp_map2">
+        select * from emp where id = #{id}
+    </select>
+
+    <!-- 通过注解来映射多个参数   -->
+    <select id="selectEmp2" resultType="emp">
+        select * from emp where id = #{id} and username = #{username}
+    </select>
+
+    <select id="selectEmp3" resultType="emp" resultMap="emp_map">
+        select * from emp where id = #{id} and username = #{username}
+    </select>
+
+    <select id="selectEmp4" resultType="emp" resultMap="emp_map">
+        select * from emp where id = #{emp.id} and username = #{emp.username}
+    </select>
+
+    <!-- 动态条件： 添加 1=1   -->
+    <select id="selectEmpDynamic" resultMap="emp_map">
+        select * from emp where 1=1
+        <if test="id != null">
+            and id=#{id}
+        </if>
+        <if test="username != null and username != ''">
+            and username=#{username}
+        </if>
+        <if test="deptId != null">
+            and dept_id=#{deptId}
+        </if>
+    </select>
+
+    <!-- 通过<where>和<if>标签实现动态查询 -->
+    <select id="selectEmpDynamic2" resultMap="emp_map">
+        select * from emp
+        <where>
+            <if test="id != null">
+                and id=#{id}
+            </if>
+            <if test="username != null and username != ''">
+                and username=#{username}
+            </if>
+            <if test="deptId != null">
+                and dept_id=#{deptId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 使用trim来实现<where标签功能>   -->
+    <select id="selectEmpDynamic3" resultMap="emp_map">
+        select * from emp
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+            <if test="username != null and username != ''">
+                and username=#{username}
+            </if>
+            <if test="deptId != null">
+                and dept_id=#{deptId}
+            </if>
+        </trim>
+    </select>
+
+    <!-- 使用trim来实现<where标签功能>   -->
+    <select id="selectEmpByDeptName" resultMap="emp_map">
+        select * from emp
+        <where>
+            <choose>
+                <when test="deptName == '研发'">
+                    and dept_id = 1
+                </when>
+                <when test="deptName == '测试'">
+                    and dept_id = 2
+                </when>
+                <otherwise>
+                    and dept_id = 3
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <!-- where id in (list) 的实现，  如果list为空  -->
+    <select id="selectEmpInDept2" resultMap="emp_map">
+        select * from emp
+            <if test="deptIds.size() == 0">
+                where 1=2
+            </if>
+            <if test="deptIds.size() != 0">
+                <where>
+                    <foreach collection="deptIds" item="id" separator="," open=" dept_id in (" close=")">
+                        #{id}
+                    </foreach>
+                </where>
+            </if>
+    </select>
+
+    <!--  特殊符号可以使用CDATA处理  -->
+    <select id="selectEmpFilterByTime" resultMap="emp_map">
+        select * from emp where create_time <![CDATA[>=]]> #{datetime}
+    </select>
+
+    <select id="selectEmpNameLike" resultMap="emp_map">
+        <choose>
+            <when test="username != null">
+                <bind name="_username" value="'%'+username+'%'"/>
+                <!-- 三种方法实现：-->
+                <!--        select * from emp where username like '%' #{username} '%'-->
+                <!-- select * from emp where username like concat ('%', #{username}, '%') -->
+                select * from emp where username like #{_username}
+            </when>
+            <otherwise>
+                select * from emp where 1=2
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--  List->list, Array->array   -->
+    <!-- 对于list类型， resultType为list的泛型类型即可 -->
+    <select id="selectEmps" resultType="emp">
+        select * from emp where username = #{list[0]} or username = #{list[1]}
+    </select>
+
+    <!--  List->list, Array->array   -->
+    <select id="selectEmps1" resultType="emp" resultMap="emp_map">
+        select * from emp where username = #{usernames[0]} or username = #{usernames[1]}
+    </select>
+
+    <!--  List->list, Array->array   -->
+    <select id="selectEmps2" resultType="emp">
+        select * from emp where username in
+        <foreach collection="usernames" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--    <select id="selectEmpUsername" resultType="java.lang.String">-->
+<!--    mybatis为java原生类型设置了默认别名-->
+    <select id="selectEmpUsername" resultType="string">
+        select username from emp where username = #{username}
+    </select>
+
+    <!-- useGeneratedKeys, keyProperty: 将id字段写回到输入的emp实体类    -->
+    <insert id="insertEmp" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO emp (username, dept_id, create_time)
+            VALUES(#{username}, #{deptId}, #{createTime});
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO emp (username, dept_id, create_time) VALUES
+        <foreach collection="emps" item="emp" separator="," open="" close="">
+            (#{emp.username}, #{emp.deptId}, #{emp.createTime})
+        </foreach>
+    </insert>
+
+    <!-- 动态更新 -->
+    <update id="updateEmp">
+        UPDATE emp
+            <set>
+                <if test="username != null">
+                    username=#{username},
+                </if>
+                <if test="deptId != null">
+                    dept_id=#{deptId},
+                </if>
+                <if test="createTime != null">
+                    create_time=#{createTime},
+                </if>
+            </set>
+            WHERE id=#{id}
+    </update>
+
+    <delete id="deleteEmp">
+        DELETE FROM emp WHERE id=#{id};
+    </delete>
+
+    <select id="selectEmpDept" resultMap="emp_map">
+        select e.id as id, e.username as username, e.dept_id as dept_id,
+                d.dept_name as dept_name from emp e inner join dept d
+            on e.dept_id = d.id
+            where e.id = #{id}
+    </select>
+
+    <select id="selectEmpDept2" resultMap="emp_map1">
+        select e.id as id, e.username as username, e.dept_id as dept_id,
+        d.dept_name as dept_name from emp e inner join dept d
+        on e.dept_id = d.id
+        where e.id = #{id}
+    </select>
+
+    <select id="selectEmpInDept" resultMap="emp_map1">
+        select e.id as id, e.username as username, e.dept_id as dept_id,
+        d.dept_name as dept_name from emp e inner join dept d
+        on e.dept_id = d.id
+        where d.id = #{id}
+    </select>
+
+    <select id="selectEmpInDept1" resultMap="emp_map">
+        select * from emp where dept_id=#{id}
+    </select>
+
+    <!--
+        默认一级缓存就是开启的,
+    -->
+    <select id="selectEmpL1Cache" resultMap="emp_map">
+        select * from emp
+        <where>
+            <if test="id != null">
+                and id=#{id}
+            </if>
+            <if test="username != null and username != ''">
+                and username=#{username}
+            </if>
+            <if test="deptId != null">
+                and dept_id=#{deptId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEmpL2CacheDisable" resultMap="emp_map" useCache="false">
+        select * from emp
+        <where>
+            <if test="id != null">
+                and id=#{id}
+            </if>
+            <if test="username != null and username != ''">
+                and username=#{username}
+            </if>
+            <if test="deptId != null">
+                and dept_id=#{deptId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAllEmps" resultMap="emp_map">
+        select * from emp
+    </select>
+</mapper>
