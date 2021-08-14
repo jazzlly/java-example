@@ -5,6 +5,11 @@ import com.smart.utils.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+/**
+ * 1. FactoryBean是一个工厂类，同时也是一个Bean。
+ * 2. 可以通过FactoryBeanc创建实际的Bean
+ * 3. FactoryBean可以在创建Bean的过程中提供多样化的定制
+ */
 @Slf4j
 public class CarFactoryBeanTest {
     public static void main(String[] args) throws Exception {
