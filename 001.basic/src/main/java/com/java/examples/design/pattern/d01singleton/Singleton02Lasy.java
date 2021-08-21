@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Singleton02Lasy {
-    private static Singleton02Lasy instance = null;
+    private static volatile Singleton02Lasy instance = null;
 
     private Singleton02Lasy() {
     }
