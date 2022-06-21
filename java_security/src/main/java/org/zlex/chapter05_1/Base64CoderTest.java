@@ -10,6 +10,8 @@ import org.junit.Test;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Base64编码与解码测试类
  * 
@@ -66,4 +68,22 @@ public class Base64CoderTest {
 
 	}
 
+	/**
+	 * 注意base64编码不是url安全的
+	 * @throws UnsupportedEncodingException
+	 */
+	@Test
+	public void base64UrlEncode() throws UnsupportedEncodingException {
+		String str = "Java加密与解密的艺术";
+		System.err.println("原文:\n\t" + str);
+		byte[] input = str.getBytes();
+
+		// Base64编码
+		BASE64Encoder encoder = new BASE64Encoder();
+		String data = encoder.encodeBuffer(input);
+		System.err.println("编码后:\n\t" + data);
+
+		String name=java.net.URLEncoder.encode(data, "UTF-8");
+		System.out.println("url encode: " + name);
+	}
 }
