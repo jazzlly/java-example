@@ -6,8 +6,6 @@ import lombok.ToString;
 /**
  * 枚举类适用于创建有限的，固定的实列
  * 比如服务端返回的错误编码
- *
- * 常用方法
  */
 @Getter
 @ToString

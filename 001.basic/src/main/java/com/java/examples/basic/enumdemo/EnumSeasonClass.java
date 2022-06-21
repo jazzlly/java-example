@@ -3,13 +3,22 @@ package com.java.examples.basic.enumdemo;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 对于内容不变的，个数有限的常量实例，可以使用枚举来实现
+ * 枚举在虚拟机内部就是一个受限制的类
+ *
+ * 枚举可以实现外部接口方法
+ * 枚举的成员可以实现外部接口方法
+ */
 @Setter
 @ToString
 public class EnumSeasonClass {
 
+    /** 可以作为枚举的成员变量 */
     private final String name;
     private final String desc;
 
+    /** 枚举可以有构造函数, 但是在类的外部不能够通过构造函数创建枚举实例 */
     private EnumSeasonClass(String name, String desc) {
         this.name = name;
         this.desc = desc;

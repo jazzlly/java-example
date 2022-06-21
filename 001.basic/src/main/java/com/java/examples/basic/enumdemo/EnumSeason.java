@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * 枚举类适用于创建有限的，固定的实列
+ * 枚举类适用于创建个数有限的，内容固定的，不变的实例
  * 比如服务端返回的错误编码
  */
 @Getter
@@ -29,8 +29,6 @@ public enum EnumSeason {
         System.out.println(EnumSeason.SUMMER);
         System.out.println(EnumSeason.WINTER);
 
-
         EnumSeason[] values = EnumSeason.values();
-
     }
 }

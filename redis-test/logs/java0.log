@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2021-11-07T01:03:25.003567900Z</date>
+  <millis>1636247005003</millis>
+  <nanos>567900</nanos>
+  <sequence>0</sequence>
+  <logger>Log01JucDemoTest</logger>
+  <level>FINEST</level>
+  <class>Log01JucDemoTest</class>
+  <method>config</method>
+  <thread>1</thread>
+  <message>controll by logging.properties</message>
+</record>
+</log>
