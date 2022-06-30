@@ -7,6 +7,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 
 /**
  * MAC加密组件
@@ -32,6 +33,18 @@ public abstract class MACCoder {
 		SecretKey secretKey = keyGenerator.generateKey();
 
 		// 获得密钥
+		return secretKey.getEncoded();
+	}
+
+	/**
+	 * 初始化HmacMD5密钥
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public static byte[] initHmacMD5Key(String key) throws Exception {
+		// 产生秘密密钥
+		SecretKey secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacMD5");
 		return secretKey.getEncoded();
 	}
 
