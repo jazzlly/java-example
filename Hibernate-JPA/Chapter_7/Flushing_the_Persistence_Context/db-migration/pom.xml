@@ -13,7 +13,7 @@
         <db.name>${dbName}</db.name>
         <jdbc.groupId>mysql</jdbc.groupId>
         <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
-        <jdbc.version>5.1.27</jdbc.version>
+        <jdbc.version>8.0.28</jdbc.version>
         <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
         <jdbc.validationQuery>SELECT 1 + 1</jdbc.validationQuery>
         <jdbc.master.url>jdbc:mysql://${master.host}:3306/${db.name}?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true</jdbc.master.url>
