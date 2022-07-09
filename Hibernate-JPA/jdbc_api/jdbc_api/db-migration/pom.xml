@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.pekall.mdm.unisync</groupId>
+    <artifactId>csr-db-migration</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>csr-db-migration</name>
+    <url>http://www.pekall.com</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <db.name>${dbName}</db.name>
+        <jdbc.groupId>mysql</jdbc.groupId>
+        <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
+        <jdbc.version>5.1.27</jdbc.version>
+        <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+        <jdbc.validationQuery>SELECT 1 + 1</jdbc.validationQuery>
+        <jdbc.master.url>jdbc:mysql://${master.host}:3306/${db.name}?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true</jdbc.master.url>
+
+        <master.host>${master}</master.host>
+        <jdbc.master.username>root</jdbc.master.username>
+        <jdbc.master.password>pekall1234</jdbc.master.password>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <driver>${jdbc.driverClassName}</driver>
+                    <url>jdbc:mysql://${master.host}:3306/${db.name}</url>
+                    <user>${jdbc.master.username}</user>
+                    <password>${jdbc.master.password}</password>
+                    <initOnMigrate>true</initOnMigrate>
+					<placeholderPrefix>$[</placeholderPrefix>
+					<placeholderSuffix>]</placeholderSuffix>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>${jdbc.groupId}</groupId>
+                        <artifactId>${jdbc.artifactId}</artifactId>
+                        <version>${jdbc.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

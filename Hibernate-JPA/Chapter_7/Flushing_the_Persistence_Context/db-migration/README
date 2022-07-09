@@ -1,0 +1,2 @@
+mvn clean compile flyway:migrate -Dmaster=localhost -DdbName=your_app_db
+
