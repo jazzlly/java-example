@@ -6,7 +6,16 @@ package org.zlex.chapter06_3_1;
 import static org.junit.Assert.*;
 
 import org.apache.commons.codec.binary.Hex;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * MAC校验
@@ -39,6 +48,19 @@ public class MACCoderTest {
 
 		// 校验
 		assertArrayEquals(data1, data2);
+	}
+
+	@Test
+	public void testHmacMdTextKey() throws Exception {
+		SecretKeySpec keySpec = new SecretKeySpec("xixihaha".getBytes(StandardCharsets.UTF_8), "HmacMD5");
+		byte[] key = keySpec.getEncoded();
+
+		byte[] bytes1 = MACCoder.encodeHmacMD5("haha".getBytes(StandardCharsets.UTF_8), key);
+		byte[] bytes2 = MACCoder.encodeHmacMD5("haha".getBytes(StandardCharsets.UTF_8), key);
+		System.out.println(Hex.encodeHexString(bytes1));
+		System.out.println(Hex.encodeHexString(bytes2));
+
+		Assertions.assertThat(bytes1).isEqualTo(bytes2);
 	}
 
 	@Test
@@ -137,6 +159,25 @@ public class MACCoderTest {
 
 		// 校验
 		assertArrayEquals(data1, data2);
+	}
+
+	@Test
+	public void testHmacSha256() throws GeneralSecurityException {
+		System.out.println(Hex.encodeHexString(
+				hmacSha256("xixi".getBytes(StandardCharsets.UTF_8),
+				"hello hmac256".getBytes(StandardCharsets.UTF_8))));
+
+		// # bash
+			// echo -n 'hello hmac256'| openssl sha256 -hex -mac HMAC -macopt hexkey:$(echo -n 'xixi'|xxd -pu)
+		// 1c1aa0df20e633bb149bd86d4b6103b26efab69875dbf685a3f182b8456cd368
+		// 1c1aa0df20e633bb149bd86d4b6103b26efab69875dbf685a3f182b8456cd368
+	}
+
+	private byte[] hmacSha256(byte[] key, byte[] payload) throws GeneralSecurityException {
+		Mac mac = Mac.getInstance("HmacSHA256");
+		mac.init(new SecretKeySpec(key, "HmacSHA256"));
+		mac.update(payload);
+		return mac.doFinal();
 	}
 
 }

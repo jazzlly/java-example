@@ -5,7 +5,13 @@ package org.zlex.chapter06_2_1;
 
 import static org.junit.Assert.*;
 
+import org.apache.commons.codec.binary.Hex;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * SHA校验
@@ -30,7 +36,8 @@ public class SHACoderTest {
 		byte[] data2 = SHACoder.encodeSHA(str.getBytes());
 
 		// 校验
-		assertArrayEquals(data1, data2);
+		Assertions.assertThat(data1).isEqualTo(data2);
+		System.out.println(Hex.encodeHexString(data1));
 	}
 
 	/**
@@ -48,6 +55,11 @@ public class SHACoderTest {
 
 		// 校验
 		assertArrayEquals(data1, data2);
+		System.out.println(data1.length);
+		System.out.println(Hex.encodeHexString(data1));
+
+		// # bash
+		// echo -n 'SHA256消息摘要' |sha256sum
 	}
 
 	/**
@@ -82,5 +94,24 @@ public class SHACoderTest {
 
 		// 校验
 		assertArrayEquals(data1, data2);
+	}
+
+	@Test
+	public void testDigestUpdateAndReset() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+		digest.update("你好xixihaha".getBytes("utf-8"));
+		digest.update("娃哈哈".getBytes("utf-8"));
+		byte[] data1 = digest.digest();
+
+		digest.reset();
+		byte[] data2 = digest.digest("你好xixihaha娃哈哈".getBytes("utf-8"));
+
+		System.out.println(Hex.encodeHexString(data2));
+		Assertions.assertThat(data1).isEqualTo(data2);
+
+		// # bash
+		// echo -n '你好xixihaha娃哈哈'|sha256sum
+		// echo -n '你好xixihaha娃哈哈'|openssl sha256
 	}
 }

@@ -6,6 +6,10 @@ package org.zlex.chapter06_1_3;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.zlex.chapter05_1.Base64Coder;
+
+import org.apache.commons.codec.binary.Hex;
+
 
 /**
  * MD5校验
@@ -31,6 +35,10 @@ public class MD5CoderTest {
 
 		// 校验
 		assertArrayEquals(data1, data2);
+		System.out.println(Hex.encodeHexString(data1));
+
+		// # bash
+		// echo -n "MD5消息摘要" | md5sum
 	}
 
 	/**

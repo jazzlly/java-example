@@ -5,6 +5,7 @@ package org.zlex.chapter05_4_1;
 
 import static org.junit.Assert.*;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -30,6 +31,8 @@ public class UrlBase64CoderTest {
 		String code = UrlBase64Coder.encode(inputStr);
 
 		System.err.println("编码后:\t" + code);
+		// SmF2YeWKoOWvhuS4juino-WvhueahOiJuuacrw.. urlbase64
+		// SmF2YeWKoOWvhuS4juino+WvhueahOiJuuacrw== base64
 
 		// 进行Base64解码
 		String outputStr = UrlBase64Coder.decode(code);
@@ -37,7 +40,7 @@ public class UrlBase64CoderTest {
 		System.err.println("解码后:\t" + outputStr);
 
 		// 验证Base64编码解码一致性
-		assertEquals(inputStr, outputStr);
+		Assertions.assertThat(inputStr).isEqualTo(outputStr);
 
 	}
 

@@ -5,6 +5,7 @@ package org.zlex.chapter05_2;
 
 import static org.junit.Assert.*;
 
+import org.assertj.core.api.Assertions;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.UrlBase64;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class Base64CoderTest {
 		System.err.println("解码后:\t" + outputStr);
 
 		// 验证Base64编码解码一致性
-		assertEquals(inputStr, outputStr);
+		Assertions.assertThat(inputStr).isEqualTo(outputStr);
 
 	}
 

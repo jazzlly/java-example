@@ -5,6 +5,7 @@ package org.zlex.chapter06_1_1;
 
 import static org.junit.Assert.*;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -30,7 +31,8 @@ public class MDCoderTest {
 		byte[] data2 = MDCoder.encodeMD2(str.getBytes());
 
 		// 校验
-		assertArrayEquals(data1, data2);
+		// assertArrayEquals(data1, data2);
+		Assertions.assertThat(data1).isEqualTo(data2);
 
 	}
 

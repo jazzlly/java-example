@@ -3,10 +3,8 @@
  */
 package org.zlex.chapter05_1;
 
-import static org.junit.Assert.*;
-
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
-
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -35,13 +33,17 @@ public class Base64CoderTest {
 		String code = Base64Coder.encode(inputStr);
 
 		System.err.println("Base64编码后:\n\t" + code);
+		// echo -n "Java加密与解密的艺术" |base64
+		//SmF2YeWKoOWvhuS4juino+WvhueahOiJuuacrw==
 
 		// 进行Base64解码
 		String outputStr = Base64Coder.decode(code);
 		System.err.println("Base64解码后:\n\t" + outputStr);
 
+		// echo -n "Java加密与解密的艺术" |base64 |base64 -d
+
 		// 验证Base64编码解码一致性
-		assertEquals(inputStr, outputStr);
+		Assertions.assertThat(inputStr).isEqualTo(outputStr);
 
 	}
 
