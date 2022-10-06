@@ -6,7 +6,11 @@ package org.zlex.chapter07_3;
 import static org.junit.Assert.*;
 
 import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.util.encoders.Hex;
 import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 /**
  * AES安全编码组件校验
@@ -28,7 +32,12 @@ public class AESCoderTest {
 		System.err.println("原文:\t" + inputStr);
 
 		// 初始化密钥
-		byte[] key = AESCoder.initKey();
+		// byte[] key = AESCoder.initKey();
+		// System.out.println(Hex.toHexString(key));
+
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		// byte[] key = (uuid + uuid + uuid + uuid + uuid + uuid + uuid + uuid)
+		byte[] key = (uuid + uuid).getBytes(StandardCharsets.UTF_8);
 		System.err.println("密钥:\t" + Base64.encodeBase64String(key));
 
 		// 加密
