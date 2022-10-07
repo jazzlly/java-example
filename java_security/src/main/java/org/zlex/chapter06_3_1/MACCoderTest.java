@@ -168,7 +168,8 @@ public class MACCoderTest {
 				"hello hmac256".getBytes(StandardCharsets.UTF_8))));
 
 		// # bash
-			// echo -n 'hello hmac256'| openssl sha256 -hex -mac HMAC -macopt hexkey:$(echo -n 'xixi'|xxd -pu)
+		// echo -n 'hello hmac256'| openssl sha256 -hex -mac HMAC -macopt hexkey:$(echo -n 'xixi'|xxd -p)
+		// echo -n 'hello hmac256'| openssl sha256 -hex -mac HMAC -macopt key:xixi
 		// 1c1aa0df20e633bb149bd86d4b6103b26efab69875dbf685a3f182b8456cd368
 		// 1c1aa0df20e633bb149bd86d4b6103b26efab69875dbf685a3f182b8456cd368
 	}

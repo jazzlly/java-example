@@ -29,6 +29,7 @@ public class CRCTest {
 		crc32.update(str.getBytes());
 		
 		String hex = Long.toHexString(crc32.getValue());
+		// echo -n "LongString" | gzip -c | tail -c8 | hexdump -n4 -e '"%u"'
 
 		System.err.println("原文：\t" + str);
 		System.err.println("CRC-32：\t" + hex);
