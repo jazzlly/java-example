@@ -5,12 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.TimestampAssigner;
 import org.apache.flink.api.common.eventtime.TimestampAssignerSupplier;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -20,27 +17,26 @@ import org.apache.flink.util.Collector;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * word counter, 统计一段时间窗口内的单词频率
  */
 @Slf4j
-public class WordCounterWindowEventTimeMain {
+public class WordCounterWindowEventTimeMainOk2 {
 
     public static void main(String[] args) throws Exception {
 
-        final StreamExecutionEnvironment env =
-                StreamExecutionEnvironment.getExecutionEnvironment();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.getConfig().setAutoWatermarkInterval(1000L);
 
-        DataStreamSource<String> socketTextStream =
-                env.socketTextStream("192.168.10.252", 9999);
+        DataStreamSource<String> socketTextStream = env.socketTextStream("192.168.10.252", 9999);
 
         SingleOutputStreamOperator<String> source = socketTextStream
                 .assignTimestampsAndWatermarks(
-                        WatermarkStrategy.<String>forBoundedOutOfOrderness(Duration.ofSeconds(3L))
+                        WatermarkStrategy.<String>forBoundedOutOfOrderness(Duration.ofSeconds(15L))
                                 .withTimestampAssigner(
                                         new TimestampAssignerSupplier<String>() {
                                     @Override
@@ -53,14 +49,14 @@ public class WordCounterWindowEventTimeMain {
                                             }
                                         };
                                     }
-                                }));
-
-
-        source.windowAll(TumblingEventTimeWindows.of(Time.seconds(5)))
-                .apply(new AllWindowFunction<String, String, TimeWindow>() {
+                                }))
+                ;
+        
+        source.windowAll(TumblingEventTimeWindows.of(Time.seconds(10)))
+                .apply(new AllWindowFunction<String, List<String>, TimeWindow>() {
                     @Override
                     public void apply(TimeWindow window, Iterable<String> values,
-                                      Collector<String> out) throws Exception {
+                                      Collector<List<String>> out) throws Exception {
                         if (!values.iterator().hasNext()) {
                             System.out.println("no values, ignore");
                             return;
@@ -69,18 +65,11 @@ public class WordCounterWindowEventTimeMain {
                         List<String> strings = new ArrayList<>();
                         for (String tuple2 : values) {
                             strings.add(tuple2);
-                            out.collect(tuple2);
                         }
                         System.out.println("got value: " + GsonUtils.toJson(strings));
+                        out.collect(strings);
                     }
-                })
-                .flatMap(new FlatMapFunction<String, Tuple2<String, Long>>() {
-                    @Override
-                    public void flatMap(String value, Collector<Tuple2<String, Long>> out) throws Exception {
-                        System.out.println("got tuple value: " + value);
-                        out.collect(new Tuple2<>(value, 1L));
-                    }
-                }).keyBy(value -> value.f0).sum(1);
+                });
 
         // 单词总量统计
 //        SingleOutputStreamOperator<Tuple2<String, Long>> sum = source

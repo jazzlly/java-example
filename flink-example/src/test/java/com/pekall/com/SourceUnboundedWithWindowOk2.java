@@ -2,7 +2,9 @@ package com.pekall.com;
 
 import com.pekall.com.util.GsonUtils;
 import com.pekall.com.vo.LogMenuDict;
-import org.apache.flink.api.common.eventtime.*;
+import org.apache.flink.api.common.eventtime.TimestampAssigner;
+import org.apache.flink.api.common.eventtime.TimestampAssignerSupplier;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
@@ -13,17 +15,17 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import org.junit.Test;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-public class SourceUnboundedWithWindowOk {
+public class SourceUnboundedWithWindowOk2 {
 
     @Test
     public void smoke() throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        env.getConfig().setAutoWatermarkInterval(10_000L);
+        env.getConfig().setAutoWatermarkInterval(1000L);
 
         // 添加事件源， 每隔3秒创建一个事件
         DataStreamSource<LogMenuDict> source = env.addSource(new RichSourceFunction<LogMenuDict>() {
@@ -34,9 +36,10 @@ public class SourceUnboundedWithWindowOk {
                 while (run) {
                     LogMenuDict foo = LogMenuDict.foo();
                     System.out.println("log menu from source: " + GsonUtils.toJson(foo));
-                    sourceContext.collectWithTimestamp(foo, System.currentTimeMillis());
+                    // sourceContext.collectWithTimestamp(foo, System.currentTimeMillis());
+                    sourceContext.collect(foo);
 
-                    Thread.sleep(3_000L);
+                    Thread.sleep(2_000L);
                 }
             }
             @Override
@@ -47,26 +50,23 @@ public class SourceUnboundedWithWindowOk {
 
         source
                 // 创建一个dummy watermark 创建器，仅仅输出日志
-                .assignTimestampsAndWatermarks(new WatermarkStrategy<LogMenuDict>() {
-                    @Override
-                    public WatermarkGenerator<LogMenuDict> createWatermarkGenerator(WatermarkGeneratorSupplier.Context context) {
-                        return new WatermarkGenerator<LogMenuDict>() {
-                            @Override
-                            public void onEvent(LogMenuDict logMenuDict, long l, WatermarkOutput watermarkOutput) {
-                                System.out.println("water mark, on event!");
-                            }
-
-                            @Override
-                            public void onPeriodicEmit(WatermarkOutput watermarkOutput) {
-                                System.out.println("water mark, emit!");
-                                watermarkOutput.emitWatermark(new Watermark(
-                                        System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(5)));
-                            }
-                        };
-                    }
-                })
+                .assignTimestampsAndWatermarks(
+                        WatermarkStrategy.<LogMenuDict>forBoundedOutOfOrderness(Duration.ofSeconds(10))
+                                .withTimestampAssigner(new TimestampAssignerSupplier<LogMenuDict>() {
+                                    @Override
+                                    public TimestampAssigner<LogMenuDict> createTimestampAssigner(Context context) {
+                                        return new TimestampAssigner<LogMenuDict>() {
+                                            @Override
+                                            public long extractTimestamp(LogMenuDict element, long recordTimestamp) {
+                                                System.out.println("extract time stamp: " + recordTimestamp);
+                                                return System.currentTimeMillis();
+                                            }
+                                        };
+                                    }
+                                })
+                )
                 // 创建一个15秒的时间窗口收集日志，并打印
-                .windowAll(TumblingEventTimeWindows.of(Time.seconds(15))).apply(
+                .windowAll(TumblingEventTimeWindows.of(Time.seconds(10))).apply(
                         new AllWindowFunction<LogMenuDict, List<LogMenuDict>, TimeWindow>() {
                             @Override
                             public void apply(TimeWindow timeWindow, Iterable<LogMenuDict> iterable,
