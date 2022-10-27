@@ -32,11 +32,12 @@ public class WordCounterWindowEventTimeMainOk2 {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.getConfig().setAutoWatermarkInterval(1000L);
 
-        DataStreamSource<String> socketTextStream = env.socketTextStream("192.168.10.252", 9999);
+        DataStreamSource<String> socketTextStream =
+                env.socketTextStream("192.168.10.252", 9999);
 
         SingleOutputStreamOperator<String> source = socketTextStream
                 .assignTimestampsAndWatermarks(
-                        WatermarkStrategy.<String>forBoundedOutOfOrderness(Duration.ofSeconds(15L))
+                        WatermarkStrategy.<String>forBoundedOutOfOrderness(Duration.ofSeconds(5L))
                                 .withTimestampAssigner(
                                         new TimestampAssignerSupplier<String>() {
                                     @Override
@@ -52,7 +53,7 @@ public class WordCounterWindowEventTimeMainOk2 {
                                 }))
                 ;
         
-        source.windowAll(TumblingEventTimeWindows.of(Time.seconds(10)))
+        source.windowAll(TumblingEventTimeWindows.of(Time.seconds(5)))
                 .apply(new AllWindowFunction<String, List<String>, TimeWindow>() {
                     @Override
                     public void apply(TimeWindow window, Iterable<String> values,

@@ -19,7 +19,7 @@ import java.time.Duration;
  * word counter, 统计一段时间窗口内的单词频率
  */
 @Slf4j
-public class WordCounterWindowEventTimeMain {
+public class WordCounterWindowEventTimeMainOk3 {
 
     public static void main(String[] args) throws Exception {
 
