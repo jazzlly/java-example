@@ -3,6 +3,8 @@ package com.pekall.com;
 import com.pekall.com.util.GsonUtils;
 import com.pekall.com.vo.LogMenuDict;
 import org.apache.flink.api.common.eventtime.*;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
@@ -23,9 +25,15 @@ public class SourceUnboundedWithWindow {
 
     @Test
     public void smoke() throws Exception {
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        env.getConfig().setAutoWatermarkInterval(1000L);
+        // env.getConfig().setAutoWatermarkInterval(1000L);
+        Configuration conf = new Configuration();
+        conf.setInteger("rest.port", 8088);
+
+        final StreamExecutionEnvironment env =
+                // StreamExecutionEnvironment.getExecutionEnvironment();
+                StreamExecutionEnvironment.createLocalEnvironment(2, conf);
+
 
         // 添加事件源， 每隔3秒创建一个事件
         DataStreamSource<LogMenuDict> source = env.addSource(new RichSourceFunction<LogMenuDict>() {
@@ -35,11 +43,11 @@ public class SourceUnboundedWithWindow {
             public void run(SourceContext<LogMenuDict> sourceContext) throws Exception {
                 while (run) {
                     LogMenuDict foo = LogMenuDict.foo();
-                    System.out.println("log menu from source: " + GsonUtils.toJson(foo));
+                    // System.out.println("log menu from source: " + GsonUtils.toJson(foo));
                     // sourceContext.collectWithTimestamp(foo, System.currentTimeMillis());
                     sourceContext.collect(foo);
 
-                    Thread.sleep(2_000L);
+                    Thread.sleep(1_000L);
                 }
             }
             @Override
@@ -51,14 +59,14 @@ public class SourceUnboundedWithWindow {
         source
                 // 创建一个dummy watermark 创建器，仅仅输出日志
                 .assignTimestampsAndWatermarks(
-                        WatermarkStrategy.<LogMenuDict>forBoundedOutOfOrderness(Duration.ofSeconds(10))
+                        WatermarkStrategy.<LogMenuDict>forBoundedOutOfOrderness(Duration.ofSeconds(2))
                                 .withTimestampAssigner(new TimestampAssignerSupplier<LogMenuDict>() {
                                     @Override
                                     public TimestampAssigner<LogMenuDict> createTimestampAssigner(Context context) {
                                         return new TimestampAssigner<LogMenuDict>() {
                                             @Override
                                             public long extractTimestamp(LogMenuDict element, long recordTimestamp) {
-                                                System.out.println("extract time stamp: " + recordTimestamp);
+                                                // System.out.println("extract time stamp: " + recordTimestamp);
                                                 return System.currentTimeMillis();
                                             }
                                         };
@@ -66,7 +74,7 @@ public class SourceUnboundedWithWindow {
                                 })
                 )
                 // 创建一个15秒的时间窗口收集日志，并打印
-                .windowAll(TumblingEventTimeWindows.of(Time.seconds(10))).apply(
+                .windowAll(TumblingEventTimeWindows.of(Time.seconds(5))).apply(
                         new AllWindowFunction<LogMenuDict, List<LogMenuDict>, TimeWindow>() {
                             @Override
                             public void apply(TimeWindow timeWindow, Iterable<LogMenuDict> iterable,
@@ -81,10 +89,10 @@ public class SourceUnboundedWithWindow {
                                     dicts.add(dict);
                                 }
 
-                                System.out.println("got data: " + GsonUtils.toJson(dicts));
+                                // System.out.println("got data: " + GsonUtils.toJson(dicts));
                                 collector.collect(dicts);
                             }
-                        });
+                        }).print();
 
         env.execute("haha");
     }
