@@ -51,7 +51,7 @@ public class SourceUnboundedWithWindowOk2 {
         source
                 // 创建一个dummy watermark 创建器，仅仅输出日志
                 .assignTimestampsAndWatermarks(
-                        WatermarkStrategy.<LogMenuDict>forBoundedOutOfOrderness(Duration.ofSeconds(10))
+                        WatermarkStrategy.<LogMenuDict>forBoundedOutOfOrderness(Duration.ofSeconds(2))
                                 .withTimestampAssigner(new TimestampAssignerSupplier<LogMenuDict>() {
                                     @Override
                                     public TimestampAssigner<LogMenuDict> createTimestampAssigner(Context context) {
@@ -66,7 +66,7 @@ public class SourceUnboundedWithWindowOk2 {
                                 })
                 )
                 // 创建一个15秒的时间窗口收集日志，并打印
-                .windowAll(TumblingEventTimeWindows.of(Time.seconds(10))).apply(
+                .windowAll(TumblingEventTimeWindows.of(Time.seconds(5))).apply(
                         new AllWindowFunction<LogMenuDict, List<LogMenuDict>, TimeWindow>() {
                             @Override
                             public void apply(TimeWindow timeWindow, Iterable<LogMenuDict> iterable,
