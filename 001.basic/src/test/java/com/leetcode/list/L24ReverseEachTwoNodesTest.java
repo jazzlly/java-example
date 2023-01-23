@@ -10,38 +10,41 @@ public class L24ReverseEachTwoNodesTest {
     @Test
     public void smoke() {
         ListNode head = ListUtils.makeList(1,2,3,4,5);
-        ListUtils.printList(head);
+        assertThat(ListUtils.toString(head))
+                .isEqualTo("1->2->3->4->5");
 
-        ListNode newHead = L24ReverseEachTwoNodes.swapPairs(head);
-        ListUtils.printList(newHead);
+        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(head);
+        assertThat(ListUtils.toString(newHead))
+                .isEqualTo("2->1->4->3->5");
+    }
+
+    @Test
+    public void boundNull() {
+        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(null);
+        assertThat(ListUtils.toString(newHead)).isEqualTo("");
+    }
+
+    @Test
+    public void boundOne() {
+        ListNode head = ListUtils.makeList(1);
+        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(head);
+        assertThat(ListUtils.toString(newHead)).isEqualTo("1");
     }
 
     @Test
     public void smoke1() {
         ListNode head = ListUtils.makeList(1,2);
-        ListUtils.printList(head);
 
-        ListNode newHead = L24ReverseEachTwoNodes.swapPairs(head);
-        ListUtils.printList(newHead);
+        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(head);
+        assertThat(ListUtils.toString(newHead)).isEqualTo("2->1");
     }
 
     @Test
     public void smoke2() {
         ListNode head = ListUtils.makeList(1,2,3);
-        ListUtils.printList(head);
 
-        ListNode newHead = L24ReverseEachTwoNodes.swapPairs(head);
-        ListUtils.printList(newHead);
-    }
-
-    @Test
-    public void boundary() {
-        assertThat(L24ReverseEachTwoNodes.swapPairs(null)).isNull();
-
-        ListNode head = ListUtils.makeList(1);
-        ListNode head2 = L24ReverseEachTwoNodes.swapPairs(head);
-
-        assertThat(head2.val).isEqualTo(head.val);
-        assertThat(head2.next).isNull();
+        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(head);
+        assertThat(ListUtils.toString(newHead))
+                .isEqualTo("2->1->3");
     }
 }

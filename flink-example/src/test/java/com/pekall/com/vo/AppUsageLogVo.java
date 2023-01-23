@@ -48,7 +48,7 @@ public class AppUsageLogVo {
                 .startTime(System.currentTimeMillis() -
                         random.nextInt((int) TimeUnit.MINUTES.toMillis(1)))
                 .endTime(System.currentTimeMillis())
-                .flowBytes((long)random.nextInt(10000))
+                .flowBytes((long)random.nextInt(5000))
                 .build();
     }
 }

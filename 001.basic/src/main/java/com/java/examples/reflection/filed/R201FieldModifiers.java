@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 
 public class R201FieldModifiers {
 	volatile int share;
-	private int instance;
+	static private int instance;
 
 	class Inner {
 	}

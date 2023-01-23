@@ -78,57 +78,57 @@ public class AppUsageStatTest {
         // todo 5: 设备和
 
         // 10秒内访问总次数
-        source.flatMap(new RichFlatMapFunction<AppUsageLogVo, Tuple2<AppUsageLogVo, AppUsageAllStatsVo>>() {
-                    MapState<String, Integer> userSumStat;
-
-
-                    @Override
-                    public void open(Configuration configuration) throws Exception {
-                        MapStateDescriptor<String, Integer> userMap = new MapStateDescriptor<String, Integer>(
-                                "user map", Types.STRING, Types.INT);
-                        userSumStat = getRuntimeContext().getMapState(userMap);
-                    }
-
-                    @Override
-                    public void flatMap(AppUsageLogVo value, Collector<Tuple2<AppUsageLogVo, AppUsageAllStatsVo>> out) throws Exception {
-                        AppUsageAllStatsVo statsVo = AppUsageAllStatsVo.builder()
-                                .totalCount(1L)
-                                .totalFlowBytes(value.getFlowBytes())
-                                .totalDurationSecs((value.getEndTime() - value.getStartTime()) / 1000L)
-                                .build();
-                        out.collect(new Tuple2<>(value, statsVo));
-                    }
-                }).assignTimestampsAndWatermarks(WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(10)))
-                .windowAll(TumblingEventTimeWindows.of(Time.seconds(10)))
-                .aggregate(new AggregateFunction<Tuple2<AppUsageLogVo, AppUsageAllStatsVo>, AppUsageAllStatsVo, AppUsageAllStatsVo>() {
-                    @Override
-                    public AppUsageAllStatsVo createAccumulator() {
-                        return null;
-                    }
-
-                    @Override
-                    public Object add(Tuple2<AppUsageLogVo, AppUsageAllStatsVo> value, Object accumulator) {
-                        return null;
-                    }
-
-                    @Override
-                    public Object getResult(Object accumulator) {
-                        return null;
-                    }
-
-                    @Override
-                    public Object merge(Object a, Object b) {
-                        return null;
-                    }
-                })
-                .sum(1).addSink(new SinkFunction<Tuple2<AppUsageLogVo, AppUsageAllStatsVo>>() {
-                    @Override
-                    public void invoke(Tuple2<AppUsageLogVo, AppUsageAllStatsVo> value, Context context) throws Exception {
-                        System.out.println("sum in 10 seconds, count: " + value.f1);
-                        System.out.println("sum in 10 seconds, flow bytes: " + value.f2);
-                        System.out.println("sum in 10 seconds, duration millis: " + value.f3);
-                    }
-                });
+//        source.flatMap(new RichFlatMapFunction<AppUsageLogVo, Tuple2<AppUsageLogVo, AppUsageAllStatsVo>>() {
+//                    MapState<String, Integer> userSumStat;
+//
+//
+//                    @Override
+//                    public void open(Configuration configuration) throws Exception {
+//                        MapStateDescriptor<String, Integer> userMap = new MapStateDescriptor<String, Integer>(
+//                                "user map", Types.STRING, Types.INT);
+//                        userSumStat = getRuntimeContext().getMapState(userMap);
+//                    }
+//
+//                    @Override
+//                    public void flatMap(AppUsageLogVo value, Collector<Tuple2<AppUsageLogVo, AppUsageAllStatsVo>> out) throws Exception {
+//                        AppUsageAllStatsVo statsVo = AppUsageAllStatsVo.builder()
+//                                .totalCount(1L)
+//                                .totalFlowBytes(value.getFlowBytes())
+//                                .totalDurationSecs((value.getEndTime() - value.getStartTime()) / 1000L)
+//                                .build();
+//                        out.collect(new Tuple2<>(value, statsVo));
+//                    }
+//                }).assignTimestampsAndWatermarks(WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(10)))
+//                .windowAll(TumblingEventTimeWindows.of(Time.seconds(10)))
+//                .aggregate(new AggregateFunction<Tuple2<AppUsageLogVo, AppUsageAllStatsVo>, AppUsageAllStatsVo, AppUsageAllStatsVo>() {
+//                    @Override
+//                    public AppUsageAllStatsVo createAccumulator() {
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    public Object add(Tuple2<AppUsageLogVo, AppUsageAllStatsVo> value, Object accumulator) {
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    public Object getResult(Object accumulator) {
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    public Object merge(Object a, Object b) {
+//                        return null;
+//                    }
+//                })
+//                .sum(1).addSink(new SinkFunction<Tuple2<AppUsageLogVo, AppUsageAllStatsVo>>() {
+//                    @Override
+//                    public void invoke(Tuple2<AppUsageLogVo, AppUsageAllStatsVo> value, Context context) throws Exception {
+//                        System.out.println("sum in 10 seconds, count: " + value.f1);
+//                        System.out.println("sum in 10 seconds, flow bytes: " + value.f2);
+//                        System.out.println("sum in 10 seconds, duration millis: " + value.f3);
+//                    }
+//                });
 
 
         /**

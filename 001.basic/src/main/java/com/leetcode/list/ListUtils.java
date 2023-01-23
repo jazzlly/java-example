@@ -4,6 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListUtils {
+
+    public static String toString(ListNode head) {
+        StringBuilder builder = new StringBuilder();
+
+        while (head != null) {
+            builder.append(head.val + "->");
+            head = head.next;
+        }
+
+        if (builder.length() > 2) {
+            builder.delete(builder.length() - 2, builder.length());
+        }
+
+        return builder.toString();
+    }
+
     public static void printList(ListNode head) {
         while (head != null) {
             System.out.print(head.val + "->");
