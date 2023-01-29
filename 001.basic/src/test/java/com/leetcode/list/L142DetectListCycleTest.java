@@ -14,7 +14,7 @@ public class L142DetectListCycleTest {
 
         ListUtils.printList(head, 20);
 
-        L142DetectListCycle test = new L142DetectListCycle();
+        L142DetectListCycle2 test = new L142DetectListCycle2();
         ListNode ret = test.detectCycle(head);
         System.out.println(ret.val);
     }

@@ -8,7 +8,7 @@ print(string.find("1234hahaxixi", 'foo'))  -- not found, nil
 -- 查找字符串，返回找到的字符串
 print(string.match('1234xixihaha', 'xixi'))
 
--- lua正则使用%作为转移字符
+-- lua正则使用%作为转义字符
 print(string.find("1234hahaxixi", '2.4'))
 
 print(string.find("1234..hahaxixi", '4%.%.h'))

@@ -10,6 +10,7 @@ print('undefined variable is:', c) -- nill
 -- 局部变量
 local a = 1
 
+-- 多变量赋值; 也可以return多个值
 local x, y = 1, 2
 
 -- 全局变量, 首字母大写
@@ -18,11 +19,16 @@ GlobVar = 2
 -- 16进制
 local hex = 0x11
 
+-- 数据类型只有string, number
+print(type(123))
+print(type("haha"))
+
 ----------------------------------------------------
 -- string
 
 local s = 'abc\txyz' -- 支持转义字符
 
+-- 多行string
 local multiline = [[multiline string
 xixi
 haha
@@ -30,6 +36,12 @@ wahaha
 heihei
 \t\thaha
 ]] -- 多行字符串中转移字符是无效的
+
+--[[
+    多行注释
+    123
+    456
+]]
 
 print(s)
 print(multiline)
@@ -55,9 +67,11 @@ print(string.byte(ss, 2))
 -- 参数
 local function foo(v1, v2)
     print(v1, v2)
+    -- 默认return nil?
 end
 
-foo(1, 2)
+print(foo(1, 2))
+
 
 -- 返回值， 不返回为nil
 local function bar(v1, v2, v3)
@@ -145,6 +159,7 @@ print(1 < 0 and 'yes' or 'no')
 ------------------------------------------------
 -- if
 
+-- 0 is true
 if 0 then
     print('0 is true!')
 end

@@ -13,21 +13,21 @@ public class L24ReverseEachTwoNodesTest {
         assertThat(ListUtils.toString(head))
                 .isEqualTo("1->2->3->4->5");
 
-        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(head);
+        ListNode newHead = L24ReverseEachTwoNodes3.swapPairs(head);
         assertThat(ListUtils.toString(newHead))
                 .isEqualTo("2->1->4->3->5");
     }
 
     @Test
     public void boundNull() {
-        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(null);
+        ListNode newHead = L24ReverseEachTwoNodes3.swapPairs(null);
         assertThat(ListUtils.toString(newHead)).isEqualTo("");
     }
 
     @Test
     public void boundOne() {
         ListNode head = ListUtils.makeList(1);
-        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(head);
+        ListNode newHead = L24ReverseEachTwoNodes3.swapPairs(head);
         assertThat(ListUtils.toString(newHead)).isEqualTo("1");
     }
 
@@ -35,7 +35,7 @@ public class L24ReverseEachTwoNodesTest {
     public void smoke1() {
         ListNode head = ListUtils.makeList(1,2);
 
-        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(head);
+        ListNode newHead = L24ReverseEachTwoNodes3.swapPairs(head);
         assertThat(ListUtils.toString(newHead)).isEqualTo("2->1");
     }
 
@@ -43,7 +43,7 @@ public class L24ReverseEachTwoNodesTest {
     public void smoke2() {
         ListNode head = ListUtils.makeList(1,2,3);
 
-        ListNode newHead = L24ReverseEachTwoNodes2.swapPairs(head);
+        ListNode newHead = L24ReverseEachTwoNodes3.swapPairs(head);
         assertThat(ListUtils.toString(newHead))
                 .isEqualTo("2->1->3");
     }
