@@ -2,7 +2,7 @@ package com.leetcode.list;
 
 public class L25ReverseListKgroup {
 
-    public ListNode reverseKGroup(ListNode head, int k) {
+    public static ListNode reverseKGroup(ListNode head, int k) {
         ListNode prev = null;
         ListNode p = head;
 
@@ -26,11 +26,12 @@ public class L25ReverseListKgroup {
         return head;
     }
 
-    private ListNode revk(ListNode head, int k) {
+    public static ListNode revk(ListNode head, int k) {
         ListNode tmp = head;
-        int step = k;
-        while (tmp != null && step-- > 0) {
+        int step = k - 1;
+        while (tmp != null && step > 0) {
             tmp = tmp.next;
+            step--;
         }
         if (step > 0 || tmp == null) {
             return null;
@@ -41,14 +42,14 @@ public class L25ReverseListKgroup {
         step = k;
         while (p != null && step-- > 0) {
             ListNode q = p.next;
-            p = prev;
+            p.next = prev;
 
             prev = p;
             p = q;
         }
 
         // tmp为队尾，tmp.next指向下一个队列
-        head.next = tmp.next;
+        head.next = p;
 
         return prev;
     }
