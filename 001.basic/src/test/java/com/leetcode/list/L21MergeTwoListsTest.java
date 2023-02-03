@@ -16,8 +16,7 @@ public class L21MergeTwoListsTest {
         ListNode l1 = ListUtils.makeList(1, 2, 4);
         ListNode l2 = ListUtils.makeList(1, 3, 4);
 
-        ListNode node = new L21MergeTwoLists()
-                .mergeTwoLists(l1, l2);
+        ListNode node = L21MergeTwoLists2.mergeTwoLists(l1, l2);
         assertThat(ListUtils.dumpList(node))
                 .containsExactly(1, 1, 2, 3, 4, 4);
     }
@@ -29,12 +28,12 @@ public class L21MergeTwoListsTest {
     public void boundary() {
         ListNode l1 = ListUtils.makeList(1);
         assertThat(ListUtils.dumpList(
-                new L21MergeTwoLists().mergeTwoLists(l1, null)))
+                L21MergeTwoLists2.mergeTwoLists(l1, null)))
                 .containsExactly(1);
 
         ListNode l2 = ListUtils.makeList(2);
         assertThat(ListUtils.dumpList(
-                new L21MergeTwoLists().mergeTwoLists(null, l2)))
+                L21MergeTwoLists2.mergeTwoLists(null, l2)))
                 .containsExactly(2);
     }
 }
