@@ -26,7 +26,7 @@ public class L94BinaryTreeInOrderTravTest {
         l00.right = l10;
         l10.left = l20;
 
-        assertThat(new L94BinaryTreeInOrderTrav().inorderTraversal(l00))
+        assertThat(new L94BinaryTreeInOrderTrav2().inorderTraversalColor(l00))
                 .containsExactly(1, 3, 2);
 
     }
