@@ -27,5 +27,8 @@ public class L145PostorderTraversalTest {
 
         List<Integer> answer = L145PostorderTraversal.postorderTraversal(n00);
         System.out.println(answer);
+
+        List<Integer> answer2 = L145PostorderTraversal.postorderTraversal2(n00);
+        System.out.println(answer2);
     }
 }

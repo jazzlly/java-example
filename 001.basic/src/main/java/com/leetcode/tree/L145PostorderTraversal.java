@@ -54,4 +54,40 @@ public class L145PostorderTraversal {
 
         return answer;
     }
+
+
+    /**
+     * 使用前序遍历的逻辑修改后序遍历
+     * 前序遍历 根 > 左 > 右
+     * 后序遍历 左 > 右 > 根
+     * 使用如下规则:
+     *  1. 将节点插入到集合的前面, 则顺序变成了 右 > 左 > 根
+     *  2. 先处理右节点，再处理左节点 , 则顺序变成 左 > 右 > 根
+     *
+     * @param root
+     * @return
+     */
+    public static List<Integer> postorderTraversal2(TreeNode root) {
+        Deque<Integer> result = new LinkedList<>();
+
+        TreeNode p = root;
+        Stack<TreeNode> stack = new Stack<>();
+
+        while (true) {
+            if (p != null) {
+                stack.push(p);
+                result.addFirst(p.val);
+                p = p.right;
+                continue;
+            }
+
+            if (stack.empty()) {
+                break;
+            }
+
+            p = stack.pop().left;
+        }
+
+        return (List<Integer>) result;
+    }
 }
