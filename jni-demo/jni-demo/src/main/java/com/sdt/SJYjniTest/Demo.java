@@ -234,8 +234,9 @@ public class Demo {
 				}
 				
 				//1  SGD_SM4_ECB
-				ret = sa.SJY_JNI_External_Encrypt(sym_outside_key, sym_outside_key_len, SGD_SM4_ECB,
-												  IV, inputData, inputData_len, sym_enData, sym_enData_len);
+				ret = sa.SJY_JNI_External_Encrypt(
+						sym_outside_key, sym_outside_key_len, SGD_SM4_ECB,
+						IV, inputData, inputData_len, sym_enData, sym_enData_len);
 				System.out.println(ret + "SJY_JNI_External_Encrypt_SGD_SM4_ECB");
 				
 				//2  SGD_SM4_ECB
