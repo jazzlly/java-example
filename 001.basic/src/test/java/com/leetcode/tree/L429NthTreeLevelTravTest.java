@@ -21,6 +21,7 @@ public class L429NthTreeLevelTravTest {
         l202.children = Arrays.asList(l303, l304);
 
         System.out.println(new L429NthTreeLevelTrav().levelOrder(l00));
+        System.out.println(new L429NthTreeLevelTrav2().levelOrder(l00));
 
     }
 }
