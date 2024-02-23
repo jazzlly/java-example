@@ -32,9 +32,6 @@ public class WordCounter {
         final StreamExecutionEnvironment env =
                 StreamExecutionEnvironment.getExecutionEnvironment();
 
-        // DataStreamSource<String> socketTextStream =
-                // env.socketTextStream("192.168.10.252", 9999);
-
         // 添加事件源， 每隔3秒创建一个事件
         DataStreamSource<String> source = env.addSource(new RichSourceFunction<String>() {
             private volatile boolean run = true;
